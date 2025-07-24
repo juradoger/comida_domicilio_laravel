@@ -18,7 +18,16 @@ class Pedido extends Model
         'fecha_entrega',
         'estado',
     ];
-    
+
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'fecha_entrega' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     /**
      * Las reglas de validación para el modelo.
      *
@@ -44,11 +53,27 @@ class Pedido extends Model
         return $this->belongsTo(Empleado::class, 'id_empleado');
     }
 
+    /**
+     * Alias para empleado - obtiene el repartidor del pedido.
+     */
+    public function repartidor()
+    {
+        return $this->belongsTo(Empleado::class, 'id_empleado');
+    }
+
     public function direcciones()
     {
         return $this->hasMany(Direccion::class, 'id_pedido');
     }
-    
+
+    /**
+     * Obtiene la dirección principal del pedido.
+     */
+    public function direccion()
+    {
+        return $this->hasOne(Direccion::class, 'id_pedido');
+    }
+
     /**
      * Obtiene los detalles del pedido.
      */
@@ -56,7 +81,7 @@ class Pedido extends Model
     {
         return $this->hasMany(Detalle_pedido::class, 'id_pedido');
     }
-    
+
     /**
      * Obtiene el reparto asociado al pedido.
      */
@@ -64,7 +89,7 @@ class Pedido extends Model
     {
         return $this->hasOne(Reparto::class, 'id_pedido');
     }
-    
+
     /**
      * Obtiene la calificación asociada al pedido.
      */
@@ -72,7 +97,7 @@ class Pedido extends Model
     {
         return $this->hasOne(Calificacion::class, 'id_pedido');
     }
-    
+
     /**
      * Obtiene los pagos asociados al pedido.
      */

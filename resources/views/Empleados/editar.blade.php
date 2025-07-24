@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form action="{{ route('empleados.actualizar', $empleado->id) }}" method="POST">
+    <form action="{{ route('empleados.empleados.actualizar', $empleado->id) }}" method="POST">
         @csrf
         @method('PUT')
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
@@ -6,10 +7,12 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Detalle_pedido;
 use App\Models\Direccion;
+use App\Models\Pago;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class ClienteController extends Controller
 {
@@ -22,25 +25,39 @@ class ClienteController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
-            
+
         $totalPedidos = Pedido::where('id_usuario', Auth::id())->count();
         $pedidosPendientes = Pedido::where('id_usuario', Auth::id())
             ->where('estado', 'pendiente')
             ->count();
-            
+
         return view('cliente.dashboard', compact('pedidosRecientes', 'totalPedidos', 'pedidosPendientes'));
     }
 
     /**
      * Muestra el menú de productos por categoría.
      */
-    public function menu()
+    public function menu(Request $request)
     {
-        $categorias = Categoria::with(['productos' => function($query) {
-            $query->where('estado', 'activo');
+        $categorias = Categoria::with(['productos' => function ($query) {
+            $query->where('estado', 'disponible');
         }])->get();
-        
-        return view('cliente.menu', compact('categorias'));
+
+        $productos = Producto::where('estado', 'disponible');
+
+        // Filtrar por categoría si se especifica
+        if ($request->has('categoria') && $request->categoria) {
+            $productos->where('id_categoria', $request->categoria);
+        }
+
+        // Filtrar por búsqueda si se especifica
+        if ($request->has('buscar') && $request->buscar) {
+            $productos->where('nombre', 'like', '%' . $request->buscar . '%');
+        }
+
+        $productos = $productos->with('categoria')->get();
+
+        return view('cliente.menu', compact('categorias', 'productos'));
     }
 
     /**
@@ -50,9 +67,9 @@ class ClienteController extends Controller
     {
         $categoria = Categoria::findOrFail($id);
         $productos = Producto::where('id_categoria', $id)
-            ->where('estado', 'activo')
+            ->where('estado', 'disponible')
             ->get();
-            
+
         return view('cliente.productos_categoria', compact('categoria', 'productos'));
     }
 
@@ -68,12 +85,18 @@ class ClienteController extends Controller
     /**
      * Muestra la lista de pedidos del cliente.
      */
-    public function pedidos()
+    public function pedidos(Request $request)
     {
-        $pedidos = Pedido::where('id_usuario', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-            
+        $query = Pedido::where('id_usuario', Auth::id())
+            ->with(['detalles.producto', 'direcciones']);
+
+        // Filtrar por estado si se especifica
+        if ($request->has('estado') && $request->estado) {
+            $query->where('estado', $request->estado);
+        }
+
+        $pedidos = $query->orderBy('created_at', 'desc')->get();
+
         return view('cliente.pedidos.index', compact('pedidos'));
     }
 
@@ -82,11 +105,13 @@ class ClienteController extends Controller
      */
     public function crearPedido()
     {
-        $categorias = Categoria::with(['productos' => function($query) {
-            $query->where('estado', 'activo');
-        }])->get();
-        
-        return view('cliente.pedidos.create', compact('categorias'));
+        $carrito = Session::get('carrito', []);
+
+        if (empty($carrito)) {
+            return redirect()->route('cliente.menu')->with('error', 'Tu carrito está vacío. Agrega productos antes de realizar un pedido.');
+        }
+
+        return view('cliente.pedidos.create');
     }
 
     /**
@@ -94,23 +119,28 @@ class ClienteController extends Controller
      */
     public function guardarPedido(Request $request)
     {
+        $carrito = Session::get('carrito', []);
+
+        if (empty($carrito)) {
+            return redirect()->route('cliente.menu')->with('error', 'Tu carrito está vacío.');
+        }
+
         $request->validate([
-            'productos' => 'required|array',
-            'productos.*.id' => 'required|exists:productos,id',
-            'productos.*.cantidad' => 'required|integer|min:1',
-            'direccion' => 'required|string',
+            'metodo_entrega' => 'required|in:domicilio,recoger',
+            'direccion' => 'required_if:metodo_entrega,domicilio|string',
             'latitud' => 'nullable|numeric',
             'longitud' => 'nullable|numeric',
+            'metodo_pago' => 'required|in:efectivo,tarjeta,transferencia,yape',
         ]);
 
-        // Calcular subtotal, costo de envío y total
+        // Calcular subtotal
         $subtotal = 0;
-        foreach ($request->productos as $item) {
-            $producto = Producto::find($item['id']);
-            $subtotal += $producto->precio * $item['cantidad'];
+        foreach ($carrito as $item) {
+            $subtotal += $item['precio'] * $item['cantidad'];
         }
-        
-        $costoEnvio = 10.00; // Valor fijo para ejemplo, podría calcularse según distancia
+
+        // Calcular costo de envío
+        $costoEnvio = $request->metodo_entrega === 'domicilio' ? 10.00 : 0.00;
         $total = $subtotal + $costoEnvio;
 
         // Crear el pedido
@@ -125,26 +155,38 @@ class ClienteController extends Controller
         ]);
 
         // Crear los detalles del pedido
-        foreach ($request->productos as $item) {
-            $producto = Producto::find($item['id']);
+        foreach ($carrito as $item) {
             Detalle_pedido::create([
                 'id_pedido' => $pedido->id,
                 'id_producto' => $item['id'],
                 'cantidad' => $item['cantidad'],
-                'precio_unitario' => $producto->precio,
+                'precio_unitario' => $item['precio'],
             ]);
         }
 
-        // Guardar la dirección de entrega
-        Direccion::create([
+        // Guardar la dirección de entrega si es domicilio
+        if ($request->metodo_entrega === 'domicilio') {
+            Direccion::create([
+                'id_pedido' => $pedido->id,
+                'direccion' => $request->direccion,
+                'latitud' => $request->latitud,
+                'longitud' => $request->longitud,
+            ]);
+        }
+
+        // Crear el pago automáticamente
+        Pago::create([
             'id_pedido' => $pedido->id,
-            'direccion' => $request->direccion,
-            'latitud' => $request->latitud,
-            'longitud' => $request->longitud,
+            'metodo_pago' => $request->metodo_pago,
+            'monto' => $total,
+            'estado_pago' => 'pendiente', // El pago inicia como pendiente
         ]);
 
+        // Limpiar el carrito
+        Session::forget('carrito');
+
         return redirect()->route('cliente.pedidos.show', $pedido->id)
-            ->with('success', 'Pedido creado exitosamente. Ahora puedes proceder al pago.');
+            ->with('success', 'Pedido creado exitosamente. El pago se ha registrado y está pendiente de procesamiento.');
     }
 
     /**
@@ -154,13 +196,13 @@ class ClienteController extends Controller
     {
         $pedido = Pedido::with(['detalles.producto', 'direcciones'])
             ->findOrFail($id);
-            
+
         // Verificar que el pedido pertenezca al usuario autenticado
         if ($pedido->id_usuario != Auth::id()) {
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para ver este pedido.');
         }
-        
+
         return view('cliente.pedidos.show', compact('pedido'));
     }
 
@@ -179,7 +221,7 @@ class ClienteController extends Controller
     public function actualizarPerfil(Request $request)
     {
         $usuario = Auth::user();
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
@@ -192,11 +234,11 @@ class ClienteController extends Controller
         $usuario->apellido = $request->apellido;
         $usuario->email = $request->email;
         $usuario->telefono = $request->telefono;
-        
+
         if ($request->filled('password')) {
             $usuario->password = Hash::make($request->password);
         }
-        
+
         $usuario->save();
 
         return redirect()->route('cliente.perfil.edit')
@@ -211,7 +253,7 @@ class ClienteController extends Controller
         $pedidos = Pedido::where('id_usuario', Auth::id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-            
+
         return view('cliente.pedidos.historial', compact('pedidos'));
     }
 
@@ -221,19 +263,19 @@ class ClienteController extends Controller
     public function cancelarPedido($id)
     {
         $pedido = Pedido::findOrFail($id);
-        
+
         // Verificar que el pedido pertenezca al usuario autenticado
         if ($pedido->id_usuario != Auth::id()) {
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para cancelar este pedido.');
         }
-        
+
         // Solo se pueden cancelar pedidos pendientes
         if ($pedido->estado != 'pendiente') {
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'Solo se pueden cancelar pedidos pendientes.');
         }
-        
+
         // Eliminar el pedido y sus relaciones (las migraciones tienen onDelete cascade)
         $pedido->delete();
 
@@ -302,7 +344,7 @@ class ClienteController extends Controller
         $request->validate([
             'name' => 'required',
             'apellido' => 'required',
-            'email' => 'required|email|unique:users,email,'.$cliente->id,
+            'email' => 'required|email|unique:users,email,' . $cliente->id,
             'telefono' => 'nullable',
         ]);
 
@@ -318,7 +360,7 @@ class ClienteController extends Controller
     {
         $cliente = User::findOrFail($id);
         $cliente->delete();
-    
+
         return redirect()->route('clientes.index')->with('success', 'Cliente eliminado.');
     }
 }

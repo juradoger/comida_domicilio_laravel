@@ -16,6 +16,14 @@ class Pago extends Model
         'estado_pago',
     ];
 
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function pedido()
     {
         return $this->belongsTo(Pedido::class, 'id_pedido');

@@ -14,17 +14,29 @@ class PagoController extends Controller
      */
     public function index()
     {
+        // Check if we're in the cliente route context (based on the URL)
+        $isClienteRoute = request()->is('cliente/*');
+
+        if ($isClienteRoute) {
+            // Always show client view when accessed via cliente routes
+            $pagos = Pago::whereHas('pedido', function ($query) {
+                $query->where('id_usuario', Auth::id());
+            })->with('pedido')->paginate(10);
+
+            return view('cliente.pagos.index', compact('pagos'));
+        }
+
         // Si es administrador, muestra todos los pagos
         if (Auth::user()->id_rol == 1) {
             $pagos = Pago::with('pedido')->get();
             return view('admin.pagos.index', compact('pagos'));
         }
-        
+
         // Si es cliente, muestra solo sus pagos
-        $pagos = Pago::whereHas('pedido', function($query) {
+        $pagos = Pago::whereHas('pedido', function ($query) {
             $query->where('id_usuario', Auth::id());
-        })->with('pedido')->get();
-        
+        })->with('pedido')->paginate(10);
+
         return view('cliente.pagos.index', compact('pagos'));
     }
 
@@ -34,16 +46,16 @@ class PagoController extends Controller
     public function create(Request $request)
     {
         $pedido_id = $request->query('pedido_id');
-        
+
         if ($pedido_id) {
             $pedido = Pedido::findOrFail($pedido_id);
-            
+
             // Verificar si el pedido pertenece al usuario actual o es admin
             if (Auth::id() != $pedido->id_usuario && Auth::user()->id_rol != 1) {
                 return redirect()->route('cliente.pedidos.index')
                     ->with('error', 'No tienes permiso para realizar el pago de este pedido.');
             }
-            
+
             // Verificar si el pedido ya tiene un pago
             $pagoExistente = Pago::where('id_pedido', $pedido_id)->where('estado_pago', 'pagado')->first();
             if ($pagoExistente) {
@@ -53,19 +65,19 @@ class PagoController extends Controller
         } else {
             // Si no se proporciona un pedido_id, mostrar lista de pedidos pendientes
             if (Auth::user()->id_rol == 1) {
-                $pedidos = Pedido::whereDoesntHave('pagos', function($query) {
+                $pedidos = Pedido::whereDoesntHave('pagos', function ($query) {
                     $query->where('estado_pago', 'pagado');
                 })->get();
             } else {
                 $pedidos = Pedido::where('id_usuario', Auth::id())
-                    ->whereDoesntHave('pagos', function($query) {
+                    ->whereDoesntHave('pagos', function ($query) {
                         $query->where('estado_pago', 'pagado');
                     })->get();
             }
-            
+
             return view('pagos.seleccionar_pedido', compact('pedidos'));
         }
-        
+
         return view('cliente.pagos.create', compact('pedido'));
     }
 
@@ -81,13 +93,13 @@ class PagoController extends Controller
         ]);
 
         $pedido = Pedido::findOrFail($request->id_pedido);
-        
+
         // Verificar si el pedido pertenece al usuario actual o es admin
         if (Auth::id() != $pedido->id_usuario && Auth::user()->id_rol != 1) {
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para realizar el pago de este pedido.');
         }
-        
+
         // Verificar si el monto coincide con el total del pedido
         if ($request->monto != $pedido->total) {
             return redirect()->back()
@@ -118,8 +130,21 @@ class PagoController extends Controller
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para ver este pago.');
         }
-        
-        return view('pagos.show', compact('pago'));
+
+        // Check if we're in the cliente route context
+        $isClienteRoute = request()->is('cliente/*');
+
+        if ($isClienteRoute) {
+            return view('cliente.pagos.show', compact('pago'));
+        }
+
+        // If admin access, show admin view
+        if (Auth::user()->id_rol == 1) {
+            return view('admin.pagos.show', compact('pago'));
+        }
+
+        // Default to cliente view
+        return view('cliente.pagos.show', compact('pago'));
     }
 
     /**
@@ -132,7 +157,7 @@ class PagoController extends Controller
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para editar pagos.');
         }
-        
+
         return view('admin.pagos.edit', compact('pago'));
     }
 
@@ -146,7 +171,7 @@ class PagoController extends Controller
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para actualizar pagos.');
         }
-        
+
         $request->validate([
             'metodo_pago' => 'required|in:efectivo,tarjeta,transferencia,qr',
             'monto' => 'required|numeric|min:0',
@@ -169,7 +194,7 @@ class PagoController extends Controller
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para eliminar pagos.');
         }
-        
+
         $pago->delete();
 
         return redirect()->route('admin.pagos.index')

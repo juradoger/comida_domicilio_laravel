@@ -28,13 +28,13 @@ class AdminController extends Controller
         $totalEmpleados = User::where('id_rol', 1)->count();
         $totalProductos = Producto::count();
         $totalCategorias = Categoria::count();
-        
+
         // Ingresos
         $ingresoTotal = Pago::where('estado_pago', 'pagado')->sum('monto');
         $ingresoHoy = Pago::where('estado_pago', 'pagado')
             ->whereDate('created_at', Carbon::today())
             ->sum('monto');
-        
+
         // Productos más vendidos
         $productosMasVendidos = Detalle_pedido::select('id_producto', DB::raw('SUM(cantidad) as total_vendido'))
             ->with('producto')
@@ -42,24 +42,32 @@ class AdminController extends Controller
             ->orderBy('total_vendido', 'desc')
             ->take(5)
             ->get();
-        
+
         // Pedidos recientes
         $pedidosRecientes = Pedido::with(['usuario', 'empleado'])
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
-        
+
         // Estadísticas por día de la semana actual
         $pedidosPorDia = Pedido::select(DB::raw('DATE(created_at) as fecha'), DB::raw('COUNT(*) as total'))
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
             ->groupBy('fecha')
             ->orderBy('fecha')
             ->get();
-        
+
         return view('admin.dashboard', compact(
-            'totalPedidos', 'pedidosHoy', 'totalClientes', 'totalEmpleados',
-            'totalProductos', 'totalCategorias', 'ingresoTotal', 'ingresoHoy',
-            'productosMasVendidos', 'pedidosRecientes', 'pedidosPorDia'
+            'totalPedidos',
+            'pedidosHoy',
+            'totalClientes',
+            'totalEmpleados',
+            'totalProductos',
+            'totalCategorias',
+            'ingresoTotal',
+            'ingresoHoy',
+            'productosMasVendidos',
+            'pedidosRecientes',
+            'pedidosPorDia'
         ));
     }
 
@@ -70,17 +78,17 @@ class AdminController extends Controller
     {
         // Ventas por mes (últimos 12 meses)
         $ventasPorMes = Pago::select(
-                DB::raw('YEAR(created_at) as año'),
-                DB::raw('MONTH(created_at) as mes'),
-                DB::raw('SUM(monto) as total')
-            )
+            DB::raw('YEAR(created_at) as año'),
+            DB::raw('MONTH(created_at) as mes'),
+            DB::raw('SUM(monto) as total')
+        )
             ->where('estado_pago', 'pagado')
             ->whereDate('created_at', '>=', Carbon::now()->subMonths(12))
             ->groupBy('año', 'mes')
             ->orderBy('año')
             ->orderBy('mes')
             ->get();
-        
+
         // Ventas por categoría
         $ventasPorCategoria = Categoria::select('categorias.nombre', DB::raw('SUM(detalle_pedidos.cantidad * detalle_pedidos.precio_unitario) as total'))
             ->join('productos', 'categorias.id', '=', 'productos.id_categoria')
@@ -90,20 +98,20 @@ class AdminController extends Controller
             ->where('pagos.estado_pago', 'pagado')
             ->groupBy('categorias.nombre')
             ->get();
-        
+
         // Calificaciones promedio
         $calificacionesPromedio = Calificacion::select(
-                'users.name',
-                'users.apellido',
-                DB::raw('AVG(calificaciones.calificacion) as promedio'),
-                DB::raw('COUNT(calificaciones.id) as total')
-            )
+            'users.name',
+            'users.apellido',
+            DB::raw('AVG(calificaciones.calificacion) as promedio'),
+            DB::raw('COUNT(calificaciones.id) as total')
+        )
             ->join('users', 'calificaciones.id_empleado', '=', 'users.id')
             ->groupBy('users.id', 'users.name', 'users.apellido')
             ->having('total', '>=', 3) // Solo empleados con al menos 3 calificaciones
             ->orderBy('promedio', 'desc')
             ->get();
-        
+
         return view('admin.estadisticas', compact('ventasPorMes', 'ventasPorCategoria', 'calificacionesPromedio'));
     }
 
@@ -113,29 +121,29 @@ class AdminController extends Controller
     public function pedidos(Request $request)
     {
         $query = Pedido::with(['usuario', 'empleado.usuario', 'detalles.producto']);
-        
+
         // Filtros
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
-        
+
         if ($request->filled('fecha_desde')) {
             $query->whereDate('created_at', '>=', $request->fecha_desde);
         }
-        
+
         if ($request->filled('fecha_hasta')) {
             $query->whereDate('created_at', '<=', $request->fecha_hasta);
         }
-        
+
         if ($request->filled('cliente')) {
-            $query->whereHas('usuario', function($q) use ($request) {
+            $query->whereHas('usuario', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->cliente . '%')
-                  ->orWhere('apellido', 'like', '%' . $request->cliente . '%');
+                    ->orWhere('apellido', 'like', '%' . $request->cliente . '%');
             });
         }
-        
+
         $pedidos = $query->orderBy('created_at', 'desc')->paginate(15);
-        
+
         return view('admin.pedidos.index', compact('pedidos'));
     }
 
@@ -145,15 +153,15 @@ class AdminController extends Controller
     public function verPedido($id)
     {
         $pedido = Pedido::with([
-            'usuario', 
-            'empleado.usuario', 
+            'usuario',
+            'empleado.usuario',
             'detalles.producto',
             'direcciones',
             'pagos',
             'calificacion',
             'reparto.repartidor'
         ])->findOrFail($id);
-        
+
         return view('admin.pedidos.show', compact('pedido'));
     }
 
@@ -166,7 +174,7 @@ class AdminController extends Controller
             ->withCount('pedidos')
             ->orderBy('name')
             ->paginate(15);
-            
+
         return view('admin.clientes.index', compact('clientes'));
     }
 
@@ -179,16 +187,16 @@ class AdminController extends Controller
         $pedidos = Pedido::where('id_usuario', $id)
             ->orderBy('created_at', 'desc')
             ->get();
-            
-        $totalGastado = Pago::whereHas('pedido', function($query) use ($id) {
+
+        $totalGastado = Pago::whereHas('pedido', function ($query) use ($id) {
             $query->where('id_usuario', $id);
         })->where('estado_pago', 'pagado')->sum('monto');
-        
+
         return view('admin.clientes.show', compact('cliente', 'pedidos', 'totalGastado'));
     }
 
     /**
-     * Muestra la lista de todos los empleados.
+     * Muestra la lista de todos los empleados.empleados.
      */
     public function empleados()
     {
@@ -196,8 +204,8 @@ class AdminController extends Controller
             ->with('empleado')
             ->orderBy('name')
             ->paginate(15);
-            
-        return view('admin.empleados.index', compact('empleados'));
+
+        return view('admin.empleados.empleados.empleados.empleados.index', compact('empleados'));
     }
 
     /**
@@ -206,18 +214,18 @@ class AdminController extends Controller
     public function verEmpleado($id)
     {
         $empleado = User::where('id_rol', 1)->with('empleado')->findOrFail($id);
-        
+
         $pedidosAsignados = Pedido::where('id_empleado', $empleado->empleado->id)
             ->orderBy('created_at', 'desc')
             ->get();
-            
+
         $calificaciones = Calificacion::where('id_empleado', $id)
             ->with(['pedido', 'usuario'])
             ->get();
-            
+
         $promedioCalificacion = $calificaciones->avg('calificacion');
-        
-        return view('admin.empleados.show', compact('empleado', 'pedidosAsignados', 'calificaciones', 'promedioCalificacion'));
+
+        return view('admin.empleados.empleados.show', compact('empleado', 'pedidosAsignados', 'calificaciones', 'promedioCalificacion'));
     }
 
     /**

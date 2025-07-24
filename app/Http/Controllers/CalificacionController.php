@@ -11,10 +11,20 @@ use Illuminate\Support\Facades\Auth;
 class CalificacionController extends Controller
 {
     /**
-     * Muestra una lista de todas las calificaciones.
+     * Muestra una lista de calificaciones.
      */
     public function index()
     {
+        // Verificar si es un cliente autenticado
+        if (Auth::check() && request()->route()->getPrefix() === 'cliente') {
+            // Para clientes, mostrar solo sus calificaciones
+            $calificaciones = Calificacion::where('id_usuario', Auth::id())
+                ->with(['pedido', 'empleado.usuario'])
+                ->get();
+            return view('cliente.calificaciones.index', compact('calificaciones'));
+        }
+
+        // Para admin, mostrar todas las calificaciones
         $calificaciones = Calificacion::with(['pedido', 'usuario', 'empleado'])->get();
         return view('calificaciones.index', compact('calificaciones'));
     }
@@ -26,16 +36,16 @@ class CalificacionController extends Controller
     {
         $pedido_id = $request->query('pedido_id');
         $pedido = null;
-        
+
         if ($pedido_id) {
             $pedido = Pedido::with(['empleado.usuario'])->findOrFail($pedido_id);
-            
+
             // Verificar si el pedido pertenece al usuario actual
             if (Auth::id() != $pedido->id_usuario) {
                 return redirect()->route('cliente.pedidos.index')
                     ->with('error', 'No tienes permiso para calificar este pedido.');
             }
-            
+
             // Verificar si el pedido ya tiene una calificación
             $calificacionExistente = Calificacion::where('id_pedido', $pedido_id)->first();
             if ($calificacionExistente) {
@@ -43,7 +53,7 @@ class CalificacionController extends Controller
                     ->with('error', 'Este pedido ya ha sido calificado.');
             }
         }
-        
+
         return view('cliente.calificaciones.create', compact('pedido'));
     }
 
@@ -60,13 +70,13 @@ class CalificacionController extends Controller
 
         // Obtener el pedido para verificar el empleado asociado
         $pedido = Pedido::with('empleado')->findOrFail($request->id_pedido);
-        
+
         // Verificar si el pedido pertenece al usuario actual
         if (Auth::id() != $pedido->id_usuario) {
             return redirect()->route('cliente.pedidos.index')
                 ->with('error', 'No tienes permiso para calificar este pedido.');
         }
-        
+
         // Crear la calificación
         Calificacion::create([
             'id_pedido' => $request->id_pedido,
@@ -106,7 +116,7 @@ class CalificacionController extends Controller
         $calificaciones = Calificacion::where('id_empleado', $id_empleado)
             ->with(['pedido', 'usuario'])
             ->get();
-            
+
         return view('admin.calificaciones.empleado', compact('calificaciones', 'empleado'));
     }
 

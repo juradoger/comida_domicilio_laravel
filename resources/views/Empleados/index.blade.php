@@ -2,9 +2,9 @@
 
 @section('content')
     <h1>Lista de Empleados</h1>
-    <a href="{{ route('empleados.crear') }}">Crear Empleado</a>
+    <a href="{{ route('empleados.empleados.crear') }}">Crear Empleado</a>
 
-    @if(session('success'))
+    @if (session('success'))
         <div>{{ session('success') }}</div>
     @endif
 
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($empleados as $empleado)
+            @foreach ($empleados as $empleado)
                 <tr>
                     <td>{{ $empleado->usuario ? $empleado->usuario->name : 'Sin usuario' }}</td>
                     <td>{{ $empleado->usuario ? $empleado->usuario->apellido : '' }}</td>
@@ -30,8 +30,9 @@
                     <td>{{ $empleado->fecha_ingreso }}</td>
                     <td>{{ $empleado->estado }}</td>
                     <td>
-                        <a href="{{ route('empleados.editar', $empleado->id) }}">Editar</a>
-                        <form action="{{ route('empleados.eliminar', $empleado->id) }}" method="POST" style="display:inline">
+                        <a href="{{ route('empleados.empleados.editar', $empleado->id) }}">Editar</a>
+                        <form action="{{ route('empleados.empleados.eliminar', $empleado->id) }}" method="POST"
+                            style="display:inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit">Eliminar</button>

@@ -12,17 +12,17 @@ class EmpleadoController extends Controller
 {
     public function index()
     {
-       
-        
+
+
         $empleados = Empleado::with('usuario')->get();
-        return view('empleados.index', compact('empleados'));
+        return view('empleados.empleados.empleados.empleados.index', compact('empleados'));
     }
 
     public function crear()
-{
-    $usuarios = User::all(); // Si necesitas mostrar usuarios disponibles en un <select>
-    return view('empleados.crear', compact('usuarios'));
-}
+    {
+        $usuarios = User::all(); // Si necesitas mostrar usuarios disponibles en un <select>
+        return view('empleados.empleados.crear', compact('usuarios'));
+    }
     public function guardar(Request $request)
     {
         $request->validate([
@@ -52,14 +52,14 @@ class EmpleadoController extends Controller
             'id_usuario' => $usuario->id,
         ]);
 
-        return redirect()->route('empleados.index')->with('success', 'Empleado creado exitosamente.');
+        return redirect()->route('empleados.empleados.empleados.empleados.index')->with('success', 'Empleado creado exitosamente.');
     }
 
     public function editar($id)
     {
         $empleado = Empleado::findOrFail($id);
-        $usuarios = User::all(); 
-        return view('empleados.editar', compact('empleado', 'usuarios'));
+        $usuarios = User::all();
+        return view('empleados.empleados.editar', compact('empleado', 'usuarios'));
     }
 
     public function actualizar(Request $request, $id)
@@ -90,7 +90,7 @@ class EmpleadoController extends Controller
             $usuario->save();
         }
 
-        return redirect()->route('empleados.index')->with('success', 'Empleado actualizado exitosamente.');
+        return redirect()->route('empleados.empleados.empleados.empleados.index')->with('success', 'Empleado actualizado exitosamente.');
     }
 
 
@@ -102,7 +102,7 @@ class EmpleadoController extends Controller
         if ($usuario) {
             $usuario->delete();
         }
-        return redirect()->route('empleados.index')->with('success', 'Empleado y usuario eliminados correctamente.');
+        return redirect()->route('empleados.empleados.empleados.empleados.index')->with('success', 'Empleado y usuario eliminados correctamente.');
     }
 
     public function listarClientes()
