@@ -100,16 +100,49 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Rutas para empleados
-    /*    Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.empleados.empleados.empleados.index');
-    Route::get('/empleados/crear', [EmpleadoController::class, 'crear'])->name('empleados.empleados.crear');
-    Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.empleados.guardar');
-    Route::get('/empleados/{id}/editar', [EmpleadoController::class, 'editar'])->name('empleados.empleados.editar');
-    Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.empleados.actualizar');
-    Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.empleados.eliminar');
- */
+    Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
+    Route::get('/empleados/crear', [EmpleadoController::class, 'crear'])->name('empleados.crear');
+    Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
+    Route::get('/empleados/{id}/editar', [EmpleadoController::class, 'editar'])->name('empleados.editar');
+    Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.actualizar');
+    Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.eliminar');
+    Route::get('/admin/empleados/{id}', [AdminController::class, 'verEmpleado'])->name('admin.empleados.ver');
+
+    // Rutas para categorías
+    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias.index');
+    Route::get('/categorias/crear', [CategoriaController::class, 'create'])->name('categorias.create');
+    Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
+    Route::get('/categorias/{categoria}/editar', [CategoriaController::class, 'edit'])->name('categorias.edit');
+    Route::put('/categorias/{categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
+    Route::delete('/categorias/{categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
+
+    // Rutas para pagos
+    Route::get('/pagos', [PagoController::class, 'index'])->name('pagos.index');
+    Route::get('/pagos/crear', [PagoController::class, 'create'])->name('pagos.crear');
+    Route::post('/pagos', [PagoController::class, 'store'])->name('pagos.guardar');
+    Route::get('/pagos/{pago}/editar', [PagoController::class, 'edit'])->name('pagos.editar');
+    Route::put('/pagos/{pago}', [PagoController::class, 'update'])->name('pagos.actualizar');
+    Route::delete('/pagos/{pago}', [PagoController::class, 'destroy'])->name('pagos.eliminar');
+
+    // Rutas para roles
+    Route::get('/roles', [App\Http\Controllers\RolController::class, 'index'])->name('roles.index');
+    Route::get('/roles/crear', [App\Http\Controllers\RolController::class, 'create'])->name('roles.crear');
+    Route::post('/roles', [App\Http\Controllers\RolController::class, 'store'])->name('roles.guardar');
+    Route::get('/roles/{rol}/editar', [App\Http\Controllers\RolController::class, 'edit'])->name('roles.editar');
+    Route::put('/roles/{rol}', [App\Http\Controllers\RolController::class, 'update'])->name('roles.actualizar');
+    Route::delete('/roles/{rol}', [App\Http\Controllers\RolController::class, 'destroy'])->name('roles.eliminar');
+
+    // Rutas para usuarios
+    Route::get('/usuarios', [App\Http\Controllers\UserController::class, 'index'])->name('usuarios.index');
+    Route::get('/usuarios/crear', [App\Http\Controllers\UserController::class, 'create'])->name('usuarios.crear');
+    Route::post('/usuarios', [App\Http\Controllers\UserController::class, 'store'])->name('usuarios.guardar');
+    Route::get('/usuarios/{usuario}/editar', [App\Http\Controllers\UserController::class, 'edit'])->name('usuarios.editar');
+    Route::put('/usuarios/{usuario}', [App\Http\Controllers\UserController::class, 'update'])->name('usuarios.actualizar');
+    Route::delete('/usuarios/{usuario}', [App\Http\Controllers\UserController::class, 'destroy'])->name('usuarios.eliminar');
 
 
 
+    // Rutas para pedidos
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
     Route::get('/pedidos/crear', [PedidoController::class, 'create'])->name('pedidos.crear');
     Route::post('/pedidos', [PedidoController::class, 'store'])->name('pedidos.guardar');
@@ -117,15 +150,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pedidos/{id}', [PedidoController::class, 'update'])->name('pedidos.actualizar');
     Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.eliminar');
 
-    // Rutas para productos (accesibles para admin y empleados)
-    Route::middleware(['role:admin,empleado'])->group(function () {
-        Route::get('/productos', [App\Http\Controllers\ProductoController::class, 'index'])->name('productos.index');
-        Route::get('/productos/create', [App\Http\Controllers\ProductoController::class, 'create'])->name('productos.create');
-        Route::post('/productos', [App\Http\Controllers\ProductoController::class, 'store'])->name('productos.store');
-        Route::get('/productos/{producto}/edit', [App\Http\Controllers\ProductoController::class, 'edit'])->name('productos.edit');
-        Route::put('/productos/{producto}', [App\Http\Controllers\ProductoController::class, 'update'])->name('productos.update');
-        Route::delete('/productos/{producto}', [App\Http\Controllers\ProductoController::class, 'destroy'])->name('productos.destroy');
-    });
+    // Rutas para productos
+    Route::get('/productos', [App\Http\Controllers\ProductoController::class, 'index'])->name('productos.index');
+    Route::get('/productos/crear', [App\Http\Controllers\ProductoController::class, 'create'])->name('productos.crear');
+    Route::post('/productos', [App\Http\Controllers\ProductoController::class, 'store'])->name('productos.guardar');
+    Route::get('/productos/{producto}/editar', [App\Http\Controllers\ProductoController::class, 'edit'])->name('productos.editar');
+    Route::put('/productos/{producto}', [App\Http\Controllers\ProductoController::class, 'update'])->name('productos.actualizar');
+    Route::delete('/productos/{producto}', [App\Http\Controllers\ProductoController::class, 'destroy'])->name('productos.eliminar');
 
     // Panel empleado: lista de clientes y empleados
     /*     Route::get('/empleado/clientes', [App\Http\Controllers\EmpleadoController::class, 'listarClientes'])->name('empleado.clientes');

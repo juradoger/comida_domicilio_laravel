@@ -205,7 +205,7 @@ class AdminController extends Controller
             ->orderBy('name')
             ->paginate(15);
 
-        return view('admin.empleados.empleados.empleados.empleados.index', compact('empleados'));
+        return view('admin.empleados.index', compact('empleados'));
     }
 
     /**
@@ -225,7 +225,7 @@ class AdminController extends Controller
 
         $promedioCalificacion = $calificaciones->avg('calificacion');
 
-        return view('admin.empleados.empleados.show', compact('empleado', 'pedidosAsignados', 'calificaciones', 'promedioCalificacion'));
+        return view('admin.empleados.show', compact('empleado', 'pedidosAsignados', 'calificaciones', 'promedioCalificacion'));
     }
 
     /**
