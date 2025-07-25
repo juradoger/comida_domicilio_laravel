@@ -7,6 +7,7 @@ use App\Filament\Resources\PedidoResource\RelationManagers;
 use App\Models\Pedido;
 use App\Models\User;
 use App\Models\Empleado;
+use App\Models\Notificacion;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -47,7 +48,11 @@ class PedidoResource extends Resource
 
                 Select::make('id_empleado')
                     ->label('Empleado Repartidor')
-                    ->relationship('empleado.usuario', 'name')
+                    ->options(function () {
+                        return \App\Models\Empleado::with('usuario')
+                            ->get()
+                            ->pluck('usuario.name', 'id');
+                    })
                     ->searchable()
                     ->preload()
                     ->nullable(),
@@ -61,7 +66,7 @@ class PedidoResource extends Resource
                 TextInput::make('costo_envio')
                     ->label('Costo de Envío')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Bs.')
                     ->required(),
 
                 TextInput::make('total')
@@ -105,7 +110,7 @@ class PedidoResource extends Resource
 
                 TextColumn::make('total')
                     ->label('Total (Bs)')
-                    ->formatStateUsing(fn ($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
+                    ->formatStateUsing(fn($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
                     ->html()
                     ->sortable(),
 
@@ -144,7 +149,11 @@ class PedidoResource extends Resource
 
                 SelectFilter::make('id_empleado')
                     ->label('Repartidor')
-                    ->relationship('empleado.usuario', 'name')
+                    ->options(function () {
+                        return \App\Models\Empleado::with('usuario')
+                            ->get()
+                            ->pluck('usuario.name', 'id');
+                    })
                     ->searchable()
                     ->preload(),
 

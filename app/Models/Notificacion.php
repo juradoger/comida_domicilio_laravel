@@ -14,8 +14,16 @@ class Notificacion extends Model
     protected $fillable = [
         'id_usuario',
         'mensaje',
+        'tipo',
+        'datos_adicionales',
         'leido',
         'fecha_envio',
+    ];
+
+    protected $casts = [
+        'datos_adicionales' => 'array',
+        'leido' => 'boolean',
+        'fecha_envio' => 'datetime',
     ];
 
     public function usuario()

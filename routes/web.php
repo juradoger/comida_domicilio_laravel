@@ -95,6 +95,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/notificaciones/{notificacion}/leida', [NotificacionController::class, 'marcarLeida'])->name('notificaciones.marcar_leida');
         Route::post('/notificaciones/todas-leidas', [NotificacionController::class, 'marcarTodasLeidas'])->name('notificaciones.marcar_todas_leidas');
         Route::delete('/notificaciones/{notificacion}', [NotificacionController::class, 'destroy'])->name('notificaciones.eliminar');
+
+        // API para notificaciones (para el dropdown en el layout)
+        Route::get('/api/notificaciones', [ClienteController::class, 'obtenerNotificaciones'])->name('api.notificaciones');
+        Route::post('/api/notificaciones/{id}/leida', [ClienteController::class, 'marcarNotificacionLeida'])->name('api.notificaciones.leida');
+        Route::post('/api/notificaciones/todas-leidas', [ClienteController::class, 'marcarTodasLeidas'])->name('api.notificaciones.todas-leidas');
     });
 
 

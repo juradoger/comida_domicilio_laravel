@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
@@ -7,11 +8,14 @@ use App\Models\Categoria;
 use App\Models\Detalle_pedido;
 use App\Models\Direccion;
 use App\Models\Pago;
+use App\Models\Notificacion;
+use App\Models\Empleado;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class ClienteController extends Controller
 {
@@ -181,6 +185,17 @@ class ClienteController extends Controller
             'estado_pago' => 'pendiente', // El pago inicia como pendiente
         ]);
 
+        // 🚀 ASIGNACIÓN AUTOMÁTICA DE EMPLEADO DISPONIBLE
+        $this->asignarEmpleadoAutomatico($pedido);
+
+        // Crear notificación para el cliente
+        Notificacion::create([
+            'id_usuario' => Auth::id(),
+            'mensaje' => '🎉 ¡Hemos recibido tu pedido #' . $pedido->id . '! Tu deliciosa comida está siendo preparada. Pronto asignaremos un repartidor para entregarte tu orden. Te mantendremos informado sobre el estado de tu pedido.',
+            'leido' => false,
+            'fecha_envio' => now(),
+        ]);
+
         // Limpiar el carrito
         Session::forget('carrito');
 
@@ -295,6 +310,52 @@ class ClienteController extends Controller
     }
 
     /**
+     * Obtiene las notificaciones del usuario autenticado.
+     */
+    public function obtenerNotificaciones()
+    {
+        $notificaciones = Notificacion::where('id_usuario', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        $noLeidas = Notificacion::where('id_usuario', Auth::id())
+            ->where('leido', false)
+            ->count();
+
+        return response()->json([
+            'notificaciones' => $notificaciones,
+            'no_leidas' => $noLeidas
+        ]);
+    }
+
+    /**
+     * Marca una notificación como leída.
+     */
+    public function marcarNotificacionLeida($id)
+    {
+        $notificacion = Notificacion::where('id_usuario', Auth::id())
+            ->where('id', $id)
+            ->firstOrFail();
+
+        $notificacion->update(['leido' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Marca todas las notificaciones como leídas.
+     */
+    public function marcarTodasLeidas()
+    {
+        Notificacion::where('id_usuario', Auth::id())
+            ->where('leido', false)
+            ->update(['leido' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Lista todos los clientes (de ClienteControllers).
      */
     public function adminIndex()
@@ -373,5 +434,35 @@ class ClienteController extends Controller
         $cliente->delete();
 
         return redirect()->route('clientes.index')->with('success', 'Cliente eliminado.');
+    }
+
+    /**
+     * 🚀 Asigna automáticamente un empleado disponible al pedido y lo pone en estado "en_camino"
+     */
+    private function asignarEmpleadoAutomatico($pedido)
+    {
+        // Buscar empleados disponibles que no tengan pedidos activos
+        $empleadoDisponible = Empleado::with('usuario')
+            ->where('estado', 'disponible')
+            ->whereDoesntHave('pedidosActivos')
+            ->first();
+
+        // Si hay un empleado disponible, asignarlo y cambiar estado
+        if ($empleadoDisponible) {
+            $pedido->update([
+                'id_empleado' => $empleadoDisponible->id,
+                'estado' => 'en_camino'
+            ]);
+
+            //  update empleado
+            $empleadoDisponible->update(['estado' => 'ocupado']);
+
+            Log::info("Pedido #{$pedido->id} asignado automáticamente al empleado {$empleadoDisponible->usuario->name} (ID: {$empleadoDisponible->id})");
+        } else {
+            Log::info("No hay empleados disponibles para el pedido #{$pedido->id}. Se requiere asignación manual.");
+        }
+
+        // Si no hay empleados disponibles, el pedido se queda en estado "pendiente"
+        // y se tendrá que asignar manualmente desde el admin
     }
 }

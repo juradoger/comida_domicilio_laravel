@@ -22,4 +22,21 @@ class Empleado extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario');
     }
+
+    /**
+     * Relación con pedidos activos del empleado
+     */
+    public function pedidosActivos()
+    {
+        return $this->hasMany(Pedido::class, 'id_empleado')
+            ->whereIn('estado', ['pendiente', 'en_camino']);
+    }
+
+    /**
+     * Relación con todos los pedidos del empleado
+     */
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'id_empleado');
+    }
 }

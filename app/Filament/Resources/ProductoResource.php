@@ -52,7 +52,7 @@ class ProductoResource extends Resource
                 TextInput::make('precio')
                     ->label('Precio')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('Bs.')
                     ->required()
                     ->minValue(0),
 
