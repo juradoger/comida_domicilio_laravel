@@ -2,6 +2,70 @@
 
 @section('title', 'Menú de Productos')
 
+@push('styles')
+    <style>
+        /* Animaciones personalizadas para los toasts */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out forwards;
+        }
+
+        .toast-exit {
+            animation: slideOutRight 0.3s ease-in forwards;
+        }
+
+        /* Efecto hover mejorado para las cards de productos */
+        .producto-card {
+            transition: all 0.3s ease;
+        }
+
+        .producto-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilo para el contador del carrito con pulso */
+        @keyframes pulse-cart {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .pulse-cart {
+            animation: pulse-cart 0.5s ease-in-out;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <div class="flex justify-between items-center mb-6">
@@ -61,7 +125,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @forelse($productos as $producto)
                 <div
-                    class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
+                    class="producto-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
                     <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : 'https://via.placeholder.com/300x200?text=Sin+Imagen' }}"
                         alt="{{ $producto->nombre }}" class="w-full h-48 object-cover">
                     <div class="p-4">
@@ -72,7 +136,8 @@
                         <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $producto->descripcion }}</p>
                         <div class="flex justify-between items-center">
                             <span class="text-orange-600 font-bold">
-                                <span class="text-xs align-top">Bs</span> {{ number_format($producto->precio, 2, '.', ',') }}
+                                <span class="text-xs align-top">Bs</span>
+                                {{ number_format($producto->precio, 2, '.', ',') }}
                             </span>
                             <div class="flex items-center gap-2">
                                 <input type="number" id="cantidad-{{ $producto->id }}" value="1" min="1"
@@ -108,6 +173,22 @@
         <script>
             function agregarAlCarrito(productoId) {
                 const cantidad = document.getElementById('cantidad-' + productoId).value;
+                const boton = event.target.closest('button');
+                const productoCard = boton.closest('.bg-white');
+                const nombreProducto = productoCard.querySelector('h3').textContent;
+
+                // Deshabilitar el botón temporalmente
+                boton.disabled = true;
+                boton.classList.add('opacity-50', 'cursor-not-allowed');
+
+                const textoOriginal = boton.innerHTML;
+                boton.innerHTML = `
+                    <svg class="animate-spin h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Agregando...
+                `;
 
                 fetch('{{ route('cliente.carrito.agregar') }}', {
                         method: 'POST',
@@ -128,33 +209,118 @@
                             if (carritoCounter) {
                                 carritoCounter.textContent = data.carrito_count;
                                 carritoCounter.classList.remove('hidden');
+
+                                // Animación del contador
+                                carritoCounter.classList.add('animate-pulse');
+                                setTimeout(() => {
+                                    carritoCounter.classList.remove('animate-pulse');
+                                }, 1000);
                             }
 
-                            // Mostrar notificación
-                            mostrarNotificacion('Producto agregado al carrito', 'success');
+                            // Mostrar notificación con información específica
+                            const mensaje = cantidad > 1 ?
+                                `${cantidad} unidades de "${nombreProducto}" agregadas al carrito` :
+                                `"${nombreProducto}" agregado al carrito`;
+                            mostrarNotificacion(mensaje, 'success');
+
+                            // Resetear el input de cantidad
+                            document.getElementById('cantidad-' + productoId).value = 1;
                         } else {
-                            mostrarNotificacion('Error al agregar el producto', 'error');
+                            mostrarNotificacion(data.message || 'Error al agregar el producto', 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        mostrarNotificacion('Error al agregar el producto', 'error');
+                        mostrarNotificacion('Error de conexión. Intenta nuevamente.', 'error');
+                    })
+                    .finally(() => {
+                        // Restaurar el botón
+                        boton.disabled = false;
+                        boton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        boton.innerHTML = textoOriginal;
                     });
             }
 
             function mostrarNotificacion(mensaje, tipo) {
                 // Crear elemento de notificación
                 const notificacion = document.createElement('div');
-                notificacion.className =
-                    `fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-white ${tipo === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
-                notificacion.textContent = mensaje;
+
+                // Configurar clases base
+                const baseClasses =
+                    'fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out flex items-center gap-3 max-w-sm';
+                const tipoClasses = tipo === 'success' ?
+                    'bg-green-500 text-white border-l-4 border-green-600' :
+                    'bg-red-500 text-white border-l-4 border-red-600';
+
+                notificacion.className = `${baseClasses} ${tipoClasses} translate-x-full opacity-0`;
+
+                // Crear icono
+                const icono = document.createElement('div');
+                icono.className = 'flex-shrink-0';
+
+                if (tipo === 'success') {
+                    icono.innerHTML = `
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    `;
+                } else {
+                    icono.innerHTML = `
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    `;
+                }
+
+                // Crear texto
+                const textoEl = document.createElement('div');
+                textoEl.className = 'flex-1 font-medium';
+                textoEl.textContent = mensaje;
+
+                // Crear botón de cerrar
+                const cerrarBtn = document.createElement('button');
+                cerrarBtn.className = 'flex-shrink-0 ml-2 text-white hover:text-gray-200 transition-colors';
+                cerrarBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                `;
+
+                // Ensamblar la notificación
+                notificacion.appendChild(icono);
+                notificacion.appendChild(textoEl);
+                notificacion.appendChild(cerrarBtn);
 
                 document.body.appendChild(notificacion);
 
-                // Remover después de 3 segundos
+                // Animar entrada
                 setTimeout(() => {
-                    notificacion.remove();
-                }, 3000);
+                    notificacion.classList.remove('translate-x-full', 'opacity-0');
+                    notificacion.classList.add('translate-x-0', 'opacity-100');
+                }, 10);
+
+                // Función para remover la notificación
+                const removerNotificacion = () => {
+                    notificacion.classList.add('translate-x-full', 'opacity-0');
+                    setTimeout(() => {
+                        if (notificacion.parentNode) {
+                            notificacion.parentNode.removeChild(notificacion);
+                        }
+                    }, 300);
+                };
+
+                // Evento para cerrar manualmente
+                cerrarBtn.addEventListener('click', removerNotificacion);
+
+                // Auto-remover después de 4 segundos
+                setTimeout(removerNotificacion, 4000);
+
+                // Hacer que la notificación se pueda cerrar haciendo click en ella
+                notificacion.addEventListener('click', (e) => {
+                    if (e.target !== cerrarBtn && !cerrarBtn.contains(e.target)) {
+                        removerNotificacion();
+                    }
+                });
             }
         </script>
     @endpush
