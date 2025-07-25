@@ -13,6 +13,14 @@ class RolSeeder extends Seeder
      */
     public function run(): void
     {
-        Rol::factory()->count(20)->create();
+        $roles = [
+            ['nombre' => 'admin'],
+            ['nombre' => 'empleado'],
+            ['nombre' => 'cliente']
+        ];
+
+        foreach ($roles as $role) {
+            Rol::factory()->create($role);
+        }
     }
 }

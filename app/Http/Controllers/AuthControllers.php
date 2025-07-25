@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -23,7 +24,19 @@ class AuthControllers extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+
+            // Obtener el usuario autenticado
+            $user = Auth::user();
+
+            // Redireccionar según el rol del usuario
+            switch ($user->id_rol) {
+                case 1: // Admin
+                    return redirect('/admin');
+                case 2: // Empleado
+                    return redirect('/empleado');
+                default: // Cliente u otros
+                    return redirect('/cliente/dashboard');
+            }
         }
 
         return back()->withErrors([

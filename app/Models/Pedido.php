@@ -40,7 +40,7 @@ class Pedido extends Model
         'subtotal' => 'required|numeric|min:0',
         'costo_envio' => 'required|numeric|min:0',
         'fecha_entrega' => 'required|date',
-        'estado' => 'required|in:pendiente,en_camino,entregado',
+        'estado' => 'required|in:pendiente,en_preparacion,en_camino,entregado,cancelado',
     ];
 
     public function usuario()

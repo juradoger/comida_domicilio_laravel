@@ -19,13 +19,38 @@ class DatabaseSeeder extends Seeder
             RolSeeder::class,
         ]);
 
-        \App\Models\User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'id_rol' => 1, // Asegúrate que el rol con id=1 existe
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'id_rol' => 1,
         ]);
 
+        $empleado = User::factory()->create([
+            'name' => 'Empleado',
+            'email' => 'empleado@example.com',
+            'id_rol' => 2,
+        ]);
+
+        $cliente = User::factory()->create([
+            'name' => 'Cliente',
+            'email' => 'cliente@example.com',
+            'id_rol' => 3,
+        ]);
+
+        // Crear registro de empleado para el usuario empleado
+        \App\Models\Empleado::create([
+            'fecha_ingreso' => now(),
+            'estado' => 'disponible',
+            'dni' => '12345678',
+            'licencia_conducir' => 'LIC123456',
+            'calificacion_promedio' => 4.5,
+            'id_usuario' => $empleado->id,
+        ]);
+
+
+
         $this->call([
+            ProductoSeeder::class,
             PedidoSeeder::class,
             DireccionSeeder::class,
         ]);

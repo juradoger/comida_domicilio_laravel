@@ -33,7 +33,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     // Rutas para clientes
-    Route::get('/cliente', [ClienteController::class, 'adminIndex'])->name('clientes.index');
+    Route::get('/cliente', function () {
+        return redirect('/cliente/dashboard');
+    });
+    Route::get('/clientes', [ClienteController::class, 'adminIndex'])->name('clientes.index');
     Route::get('/cliente/crear', [ClienteController::class, 'adminCreate'])->name('clientes.crear');
     Route::post('/cliente', [ClienteController::class, 'adminStore'])->name('clientes.guardar');
     Route::get('/cliente/editar/{id}', [ClienteController::class, 'adminEdit'])->name('clientes.editar');
@@ -96,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
+
     // Rutas para empleados
     /*    Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.empleados.empleados.empleados.index');
     Route::get('/empleados/crear', [EmpleadoController::class, 'crear'])->name('empleados.empleados.crear');
@@ -104,27 +108,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.empleados.actualizar');
     Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.empleados.eliminar');
  */
-    // Rutas para el rol de empleado/repartidor
-    Route::middleware(['role:empleado'])->prefix('empleado')->name('empleado.')->group(function () {
-        // Rutas para listar clientes y repartidores
-        Route::get('/clientes', [EmpleadoController::class, 'listarClientes'])->name('clientes');
-        Route::get('/repartidores', [EmpleadoController::class, 'listarEmpleados'])->name('repartidores');
 
-        // Rutas para repartos
-        Route::get('/repartos', [RepartoController::class, 'index'])->name('repartos.index');
-        Route::get('/repartos/crear', [RepartoController::class, 'create'])->name('repartos.crear');
-        Route::post('/repartos', [RepartoController::class, 'store'])->name('repartos.guardar');
-        Route::get('/repartos/{reparto}', [RepartoController::class, 'show'])->name('repartos.ver');
-        Route::get('/repartos/{reparto}/editar', [RepartoController::class, 'edit'])->name('repartos.editar');
-        Route::put('/repartos/{reparto}', [RepartoController::class, 'update'])->name('repartos.actualizar');
-        Route::post('/repartos/{reparto}/entregado', [RepartoController::class, 'marcarEntregado'])->name('repartos.marcar_entregado');
-        Route::delete('/repartos/{reparto}', [RepartoController::class, 'destroy'])->name('repartos.eliminar');
 
-        // Rutas para notificaciones (empleado)
-        Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
-        Route::post('/notificaciones/{notificacion}/leida', [NotificacionController::class, 'marcarLeida'])->name('notificaciones.marcar_leida');
-        Route::post('/notificaciones/todas-leidas', [NotificacionController::class, 'marcarTodasLeidas'])->name('notificaciones.marcar_todas_leidas');
-    });
 
     Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
     Route::get('/pedidos/crear', [PedidoController::class, 'create'])->name('pedidos.crear');

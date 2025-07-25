@@ -105,7 +105,7 @@ class PedidoResource extends Resource
 
                 TextColumn::make('total')
                     ->label('Total')
-                    ->money('COP')
+                    ->money('BOB')
                     ->sortable(),
 
                 TextColumn::make('fecha_entrega')

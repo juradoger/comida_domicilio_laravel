@@ -6,11 +6,12 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-gray-800">Editar Calificación</h2>
-            <a href="{{ route('cliente.calificaciones.show', $calificacion->id) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded transition duration-300">
+            <a href="{{ route('cliente.calificaciones.show', $calificacion->id) }}"
+                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded transition duration-300">
                 <i class="fas fa-arrow-left mr-2"></i> Volver a Detalles
             </a>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
             <div class="p-6">
                 <div class="mb-6 bg-gray-50 p-4 rounded-lg">
@@ -18,53 +19,70 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <p><span class="font-medium">Pedido ID:</span> #{{ $calificacion->pedido->id }}</p>
-                            <p><span class="font-medium">Fecha:</span> {{ $calificacion->pedido->created_at->format('d/m/Y H:i') }}</p>
-                            <p><span class="font-medium">Fecha de Entrega:</span> {{ $calificacion->pedido->fecha_entrega ? date('d/m/Y H:i', strtotime($calificacion->pedido->fecha_entrega)) : 'Pendiente' }}</p>
+                            <p><span class="font-medium">Fecha:</span>
+                                {{ $calificacion->pedido->created_at->format('d/m/Y H:i') }}</p>
+                            <p><span class="font-medium">Fecha de Entrega:</span>
+                                {{ $calificacion->pedido->fecha_entrega ? date('d/m/Y H:i', strtotime($calificacion->pedido->fecha_entrega)) : 'Pendiente' }}
+                            </p>
                         </div>
                         <div>
-                            <p><span class="font-medium">Estado:</span> {{ ucfirst(str_replace('_', ' ', $calificacion->pedido->estado)) }}</p>
-                            <p><span class="font-medium">Total:</span> S/ {{ number_format($calificacion->pedido->total, 2) }}</p>
+                            <p><span class="font-medium">Estado:</span>
+                                {{ ucfirst(str_replace('_', ' ', $calificacion->pedido->estado)) }}</p>
+                            <p><span class="font-medium">Total:</span> Bs
+                                {{ number_format($calificacion->pedido->total, 2) }}</p>
                             <p><span class="font-medium">Repartidor:</span> {{ $calificacion->empleado->user->name }}</p>
                         </div>
                     </div>
                 </div>
-                
-                <form method="POST" action="{{ route('cliente.calificaciones.update', $calificacion->id) }}" class="space-y-6">
+
+                <form method="POST" action="{{ route('cliente.calificaciones.update', $calificacion->id) }}"
+                    class="space-y-6">
                     @csrf
                     @method('PUT')
-                    
+
                     <input type="hidden" name="pedido_id" value="{{ $calificacion->pedido_id }}">
                     <input type="hidden" name="empleado_id" value="{{ $calificacion->empleado_id }}">
-                    
+
                     <div class="mb-6">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Puntuación:</label>
                         <div class="flex items-center space-x-1">
                             <div class="flex items-center space-x-1" id="star-rating">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <button type="button" class="star-btn {{ $i <= $calificacion->puntuacion ? 'text-yellow-400' : 'text-gray-300' }} hover:text-yellow-400 focus:outline-none" data-rating="{{ $i }}">
-                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button type="button"
+                                        class="star-btn {{ $i <= $calificacion->puntuacion ? 'text-yellow-400' : 'text-gray-300' }} hover:text-yellow-400 focus:outline-none"
+                                        data-rating="{{ $i }}">
+                                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                            </path>
                                         </svg>
                                     </button>
                                 @endfor
                             </div>
-                            <input type="hidden" name="puntuacion" id="puntuacion" value="{{ old('puntuacion', $calificacion->puntuacion) }}" required>
+                            <input type="hidden" name="puntuacion" id="puntuacion"
+                                value="{{ old('puntuacion', $calificacion->puntuacion) }}" required>
                         </div>
                         @error('puntuacion')
                             <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-4">
-                        <label for="comentario" class="block text-gray-700 text-sm font-bold mb-2">Comentario (opcional):</label>
-                        <textarea name="comentario" id="comentario" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Cuéntanos tu experiencia con el servicio y el repartidor">{{ old('comentario', $calificacion->comentario) }}</textarea>
+                        <label for="comentario" class="block text-gray-700 text-sm font-bold mb-2">Comentario
+                            (opcional):</label>
+                        <textarea name="comentario" id="comentario" rows="4"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Cuéntanos tu experiencia con el servicio y el repartidor">{{ old('comentario', $calificacion->comentario) }}</textarea>
                     </div>
-                    
+
                     <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                        <button type="submit"
+                            class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition duration-300">
                             Actualizar Calificación
                         </button>
-                        <a href="{{ route('cliente.calificaciones.show', $calificacion->id) }}" class="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800">
+                        <a href="{{ route('cliente.calificaciones.show', $calificacion->id) }}"
+                            class="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800">
                             Cancelar
                         </a>
                     </div>
@@ -72,13 +90,13 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Manejo de la selección de estrellas
             const starButtons = document.querySelectorAll('.star-btn');
             const puntuacionInput = document.getElementById('puntuacion');
-            
+
             // Agregar eventos a los botones de estrellas
             starButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -87,7 +105,7 @@
                     updateStars(rating);
                 });
             });
-            
+
             function updateStars(rating) {
                 starButtons.forEach((btn, index) => {
                     if (index < rating) {

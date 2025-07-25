@@ -145,9 +145,9 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-gray-600">S/. {{ number_format($detalle->precio_unitario, 2) }} x
+                                        <p class="text-gray-600">Bs. {{ number_format($detalle->precio_unitario, 2) }} x
                                             {{ $detalle->cantidad }}</p>
-                                        <p class="font-bold text-gray-800 mt-1">S/.
+                                        <p class="font-bold text-gray-800 mt-1">Bs.
                                             {{ number_format($detalle->precio_unitario * $detalle->cantidad, 2) }}</p>
                                     </div>
                                 </div>
@@ -289,22 +289,22 @@
                     <div class="p-6 space-y-4">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal:</span>
-                            <span class="font-medium">S/. {{ number_format($pedido->subtotal, 2) }}</span>
+                            <span class="font-medium">Bs. {{ number_format($pedido->subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Costo de envío:</span>
-                            <span class="font-medium">S/. {{ number_format($pedido->costo_envio, 2) }}</span>
+                            <span class="font-medium">Bs. {{ number_format($pedido->costo_envio, 2) }}</span>
                         </div>
                         @if ($pedido->descuento > 0)
                             <div class="flex justify-between text-green-600">
                                 <span>Descuento:</span>
-                                <span class="font-medium">- S/. {{ number_format($pedido->descuento, 2) }}</span>
+                                <span class="font-medium">- Bs. {{ number_format($pedido->descuento, 2) }}</span>
                             </div>
                         @endif
                         <div class="pt-4 border-t">
                             <div class="flex justify-between items-center">
                                 <span class="text-lg font-bold text-gray-800">Total:</span>
-                                <span class="text-xl font-bold text-orange-600">S/.
+                                <span class="text-xl font-bold text-orange-600">Bs.
                                     {{ number_format($pedido->total, 2) }}</span>
                             </div>
                         </div>

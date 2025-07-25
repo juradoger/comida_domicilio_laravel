@@ -105,6 +105,17 @@ class EmpleadoController extends Controller
         return redirect()->route('empleados.empleados.empleados.empleados.index')->with('success', 'Empleado y usuario eliminados correctamente.');
     }
 
+    /**
+     * Muestra el dashboard del empleado.
+     */
+    public function dashboard()
+    {
+        // Aquí puedes agregar estadísticas específicas para empleados
+        // Por ejemplo: repartos asignados, pedidos pendientes, etc.
+
+        return view('empleado.dashboard');
+    }
+
     public function listarClientes()
     {
         $clientes = \App\Models\User::where('id_rol', 2)->get();

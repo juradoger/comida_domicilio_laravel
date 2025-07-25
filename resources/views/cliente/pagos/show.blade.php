@@ -26,7 +26,7 @@
 
                             <div class="flex justify-between">
                                 <span class="text-gray-600 font-medium">Monto:</span>
-                                <span class="text-gray-800 font-bold">S/ {{ number_format($pago->monto, 2) }}</span>
+                                <span class="text-gray-800 font-bold">Bs {{ number_format($pago->monto, 2) }}</span>
                             </div>
 
                             <div class="flex justify-between">
@@ -91,7 +91,7 @@
 
                             <div class="flex justify-between">
                                 <span class="text-gray-600 font-medium">Total del Pedido:</span>
-                                <span class="text-gray-800 font-bold">S/
+                                <span class="text-gray-800 font-bold">Bs
                                     {{ number_format($pago->pedido->total, 2) }}</span>
                             </div>
                         </div>

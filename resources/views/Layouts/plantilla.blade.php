@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +9,23 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .navbar-gradient { background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); }
-        .btn-gradient { background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); }
-        .text-gradient { background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .navbar-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
     @stack('styles')
 </head>
+
 <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
     <!-- Navbar estilizado con gradiente naranja y más elementos -->
     <header class="navbar-gradient text-white shadow-md">
@@ -24,20 +35,23 @@
                 <span class="text-2xl font-extrabold text-gradient">Comida a Domicilio</span>
             </div>
             <nav class="flex gap-6 items-center">
-                <a href="/" class="hover:underline font-semibold transition">Inicio</a>
+                <a href="/cliente/dashboard" class="hover:underline font-semibold transition">Inicio</a>
                 <a href="#menu" class="hover:underline font-semibold transition">Menú</a>
                 <a href="#pedidos" class="hover:underline font-semibold transition">Pedidos</a>
                 <a href="#contacto" class="hover:underline font-semibold transition">Contacto</a>
                 @auth
-                    <a href="{{ route('logout') }}" class="ml-4 px-4 py-2 rounded btn-gradient text-white font-bold shadow hover:scale-105 transition"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="{{ route('logout') }}"
+                        class="ml-4 px-4 py-2 rounded btn-gradient text-white font-bold shadow hover:scale-105 transition"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Cerrar Sesión
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                         @csrf
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="ml-4 px-4 py-2 rounded btn-gradient text-white font-bold shadow hover:scale-105 transition">Iniciar Sesión</a>
+                    <a href="{{ route('login') }}"
+                        class="ml-4 px-4 py-2 rounded btn-gradient text-white font-bold shadow hover:scale-105 transition">Iniciar
+                        Sesión</a>
                 @endauth
             </nav>
         </div>
@@ -59,13 +73,18 @@
                 <a href="#" class="hover:underline">Soporte</a>
             </div>
             <div class="flex gap-4 items-center">
-                <a href="#" title="Facebook"><img src="https://img.icons8.com/fluency/24/facebook-new.png" alt="Facebook"></a>
-                <a href="#" title="Instagram"><img src="https://img.icons8.com/fluency/24/instagram-new.png" alt="Instagram"></a>
-                <a href="#" title="WhatsApp"><img src="https://img.icons8.com/fluency/24/whatsapp.png" alt="WhatsApp"></a>
+                <a href="#" title="Facebook"><img src="https://img.icons8.com/fluency/24/facebook-new.png"
+                        alt="Facebook"></a>
+                <a href="#" title="Instagram"><img src="https://img.icons8.com/fluency/24/instagram-new.png"
+                        alt="Instagram"></a>
+                <a href="#" title="WhatsApp"><img src="https://img.icons8.com/fluency/24/whatsapp.png"
+                        alt="WhatsApp"></a>
             </div>
         </div>
-        <div class="text-center text-xs py-2 bg-opacity-30 bg-black">&copy; {{ date('Y') }} Comida a Domicilio. Todos los derechos reservados.</div>
+        <div class="text-center text-xs py-2 bg-opacity-30 bg-black">&copy; {{ date('Y') }} Comida a Domicilio.
+            Todos los derechos reservados.</div>
     </footer>
     @stack('scripts')
 </body>
+
 </html>

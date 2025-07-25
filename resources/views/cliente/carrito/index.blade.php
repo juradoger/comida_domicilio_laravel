@@ -59,7 +59,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                                        S/. {{ number_format($item->producto->precio, 2) }}
+                                        Bs. {{ number_format($item->producto->precio, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="flex items-center justify-center">
@@ -83,7 +83,7 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium text-gray-900">
-                                        S/. {{ number_format($item->producto->precio * $item->cantidad, 2) }}
+                                        Bs. {{ number_format($item->producto->precio * $item->cantidad, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <form action="{{ route('cliente.carrito.destroy', $item->id) }}" method="POST"
@@ -113,22 +113,22 @@
                         <div class="p-6 space-y-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Subtotal:</span>
-                                <span class="font-medium">S/. {{ number_format($subtotal, 2) }}</span>
+                                <span class="font-medium">Bs. {{ number_format($subtotal, 2) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Costo de envío:</span>
-                                <span class="font-medium">S/. {{ number_format($costoEnvio, 2) }}</span>
+                                <span class="font-medium">Bs. {{ number_format($costoEnvio, 2) }}</span>
                             </div>
                             @if ($descuento > 0)
                                 <div class="flex justify-between text-green-600">
                                     <span>Descuento:</span>
-                                    <span class="font-medium">- S/. {{ number_format($descuento, 2) }}</span>
+                                    <span class="font-medium">- Bs. {{ number_format($descuento, 2) }}</span>
                                 </div>
                             @endif
                             <div class="pt-4 border-t">
                                 <div class="flex justify-between items-center">
                                     <span class="text-lg font-bold text-gray-800">Total:</span>
-                                    <span class="text-xl font-bold text-orange-600">S/.
+                                    <span class="text-xl font-bold text-orange-600">Bs.
                                         {{ number_format($total, 2) }}</span>
                                 </div>
                             </div>

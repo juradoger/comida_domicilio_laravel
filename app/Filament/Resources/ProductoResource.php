@@ -111,7 +111,7 @@ class ProductoResource extends Resource
 
                 TextColumn::make('precio')
                     ->label('Precio')
-                    ->money('COP')
+                    ->money('BOB')
                     ->sortable(),
 
                 TextColumn::make('stock')

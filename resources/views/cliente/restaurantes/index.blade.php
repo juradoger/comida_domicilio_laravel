@@ -7,7 +7,7 @@
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-gray-800">Restaurantes Asociados</h2>
         </div>
-        
+
         <!-- Filtros y Búsqueda -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
             <div class="p-6">
@@ -15,16 +15,18 @@
                     <!-- Búsqueda -->
                     <div class="md:w-1/3">
                         <div class="relative">
-                            <input type="text" id="search-restaurant" placeholder="Buscar restaurante..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 pl-10">
+                            <input type="text" id="search-restaurant" placeholder="Buscar restaurante..."
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 pl-10">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Filtros -->
                     <div class="flex flex-wrap gap-2">
-                        <select id="filter-category" class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+                        <select id="filter-category"
+                            class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
                             <option value="">Todas las categorías</option>
                             <option value="comida-rapida">Comida Rápida</option>
                             <option value="pizza">Pizza</option>
@@ -35,25 +37,28 @@
                             <option value="saludable">Comida Saludable</option>
                             <option value="postres">Postres</option>
                         </select>
-                        
-                        <select id="filter-rating" class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+
+                        <select id="filter-rating"
+                            class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
                             <option value="">Todas las calificaciones</option>
                             <option value="5">5 estrellas</option>
                             <option value="4">4+ estrellas</option>
                             <option value="3">3+ estrellas</option>
                         </select>
-                        
-                        <select id="filter-delivery-time" class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+
+                        <select id="filter-delivery-time"
+                            class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
                             <option value="">Cualquier tiempo de entrega</option>
                             <option value="15">Menos de 15 minutos</option>
                             <option value="30">Menos de 30 minutos</option>
                             <option value="45">Menos de 45 minutos</option>
                         </select>
                     </div>
-                    
+
                     <!-- Ordenar por -->
                     <div>
-                        <select id="sort-by" class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
+                        <select id="sort-by"
+                            class="rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
                             <option value="popular">Más populares</option>
                             <option value="rating">Mejor calificados</option>
                             <option value="delivery-time">Tiempo de entrega</option>
@@ -63,12 +68,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Categorías Destacadas -->
         <div class="mb-8">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Categorías Destacadas</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="comida-rapida">
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="comida-rapida">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-hamburger text-orange-600"></i>
@@ -76,8 +83,10 @@
                         <h4 class="font-medium text-gray-800">Comida Rápida</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="pizza">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="pizza">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-pizza-slice text-orange-600"></i>
@@ -85,8 +94,10 @@
                         <h4 class="font-medium text-gray-800">Pizza</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="sushi">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="sushi">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-fish text-orange-600"></i>
@@ -94,8 +105,10 @@
                         <h4 class="font-medium text-gray-800">Sushi</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="china">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="china">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-utensils text-orange-600"></i>
@@ -103,8 +116,10 @@
                         <h4 class="font-medium text-gray-800">China</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="italiana">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="italiana">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-cheese text-orange-600"></i>
@@ -112,8 +127,10 @@
                         <h4 class="font-medium text-gray-800">Italiana</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="peruana">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="peruana">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-pepper-hot text-orange-600"></i>
@@ -121,8 +138,10 @@
                         <h4 class="font-medium text-gray-800">Peruana</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="saludable">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="saludable">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-seedling text-orange-600"></i>
@@ -130,8 +149,10 @@
                         <h4 class="font-medium text-gray-800">Saludable</h4>
                     </div>
                 </a>
-                
-                <a href="#" class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300" data-category="postres">
+
+                <a href="#"
+                    class="category-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
+                    data-category="postres">
                     <div class="p-4 text-center">
                         <div class="w-12 h-12 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-2">
                             <i class="fas fa-ice-cream text-orange-600"></i>
@@ -141,16 +162,20 @@
                 </a>
             </div>
         </div>
-        
+
         <!-- Restaurantes Destacados -->
         <div class="mb-8">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Restaurantes Destacados</h3>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Restaurante 1 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="comida-rapida" data-rating="4.8" data-delivery-time="25">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="comida-rapida" data-rating="4.8" data-delivery-time="25">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/burger-king.jpg') }}" alt="Burger King" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=Burger+King'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/burger-king.jpg') }}" alt="Burger King"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=Burger+King'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.8
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -174,17 +199,22 @@
                             <span>1.2 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 20.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 20.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Restaurante 2 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="pizza" data-rating="4.5" data-delivery-time="30">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="pizza" data-rating="4.5" data-delivery-time="30">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/pizza-hut.jpg') }}" alt="Pizza Hut" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=Pizza+Hut'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/pizza-hut.jpg') }}" alt="Pizza Hut"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=Pizza+Hut'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.5
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -208,17 +238,22 @@
                             <span>2.5 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 25.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 25.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Restaurante 3 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="sushi" data-rating="4.9" data-delivery-time="40">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="sushi" data-rating="4.9" data-delivery-time="40">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/sushi-express.jpg') }}" alt="Sushi Express" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=Sushi+Express'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/sushi-express.jpg') }}" alt="Sushi Express"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=Sushi+Express'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.9
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -242,17 +277,22 @@
                             <span>3.0 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 35.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 35.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Restaurante 4 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="china" data-rating="4.3" data-delivery-time="35">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="china" data-rating="4.3" data-delivery-time="35">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/china-wok.jpg') }}" alt="China Wok" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=China+Wok'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/china-wok.jpg') }}" alt="China Wok"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=China+Wok'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.3
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -276,17 +316,22 @@
                             <span>1.8 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 30.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 30.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Restaurante 5 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="italiana" data-rating="4.7" data-delivery-time="45">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="italiana" data-rating="4.7" data-delivery-time="45">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/la-trattoria.jpg') }}" alt="La Trattoria" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=La+Trattoria'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/la-trattoria.jpg') }}" alt="La Trattoria"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=La+Trattoria'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.7
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -310,17 +355,22 @@
                             <span>4.2 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 40.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 40.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Restaurante 6 -->
-                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300" data-category="peruana" data-rating="4.9" data-delivery-time="40">
+                <div class="restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                    data-category="peruana" data-rating="4.9" data-delivery-time="40">
                     <div class="relative">
-                        <img src="{{ asset('img/restaurants/el-aji.jpg') }}" alt="El Ají" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=El+Aji'">
-                        <div class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                        <img src="{{ asset('img/restaurants/el-aji.jpg') }}" alt="El Ají"
+                            class="w-full h-48 object-cover"
+                            onerror="this.src='https://via.placeholder.com/400x200?text=El+Aji'">
+                        <div
+                            class="absolute top-0 right-0 bg-orange-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
                             <i class="fas fa-star mr-1"></i> 4.9
                         </div>
                         <div class="absolute bottom-0 left-0 bg-white px-2 py-1 m-2 rounded-md text-sm font-medium">
@@ -344,45 +394,51 @@
                             <span>2.7 km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. 35.00</span>
-                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. 35.00</span>
+                            <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver
+                                Menú</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Todos los Restaurantes -->
         <div>
             <h3 class="text-xl font-bold text-gray-800 mb-4">Todos los Restaurantes</h3>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="all-restaurants">
                 <!-- Los restaurantes se cargarán dinámicamente aquí -->
             </div>
-            
+
             <!-- Paginación -->
             <div class="mt-8 flex justify-center">
                 <nav class="inline-flex rounded-md shadow">
-                    <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                    <a href="#"
+                        class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                         <i class="fas fa-chevron-left"></i>
                     </a>
-                    <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">1</a>
+                    <a href="#"
+                        class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">1</a>
                     <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-orange-500 text-white">2</a>
-                    <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">3</a>
-                    <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">4</a>
-                    <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">5</a>
-                    <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                    <a href="#"
+                        class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">3</a>
+                    <a href="#"
+                        class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">4</a>
+                    <a href="#"
+                        class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">5</a>
+                    <a href="#"
+                        class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </nav>
             </div>
         </div>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Datos de ejemplo para restaurantes adicionales
-            const restaurantsData = [
-                {
+            const restaurantsData = [{
                     name: "McDonald's",
                     image: "mcdonalds.jpg",
                     rating: 4.6,
@@ -491,17 +547,18 @@
                     minOrder: 30.00
                 }
             ];
-            
+
             const allRestaurantsContainer = document.getElementById('all-restaurants');
-            
+
             // Cargar restaurantes adicionales
             restaurantsData.forEach(restaurant => {
                 const restaurantCard = document.createElement('div');
-                restaurantCard.className = 'restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300';
+                restaurantCard.className =
+                    'restaurant-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300';
                 restaurantCard.setAttribute('data-category', restaurant.category);
                 restaurantCard.setAttribute('data-rating', restaurant.rating);
                 restaurantCard.setAttribute('data-delivery-time', restaurant.deliveryTime.split('-')[0]);
-                
+
                 restaurantCard.innerHTML = `
                     <div class="relative">
                         <img src="{{ asset('img/restaurants/${restaurant.image}') }}" alt="${restaurant.name}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=${encodeURIComponent(restaurant.name)}'">
@@ -527,15 +584,15 @@
                             <span>${restaurant.distance} km</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Pedido mínimo: S/. ${restaurant.minOrder.toFixed(2)}</span>
+                            <span class="text-sm text-gray-600">Pedido mínimo: Bs. ${restaurant.minOrder.toFixed(2)}</span>
                             <a href="#" class="text-orange-600 hover:text-orange-800 font-medium text-sm">Ver Menú</a>
                         </div>
                     </div>
                 `;
-                
+
                 allRestaurantsContainer.appendChild(restaurantCard);
             });
-            
+
             // Filtrar por categoría al hacer clic en las tarjetas de categoría
             const categoryCards = document.querySelectorAll('.category-card');
             categoryCards.forEach(card => {
@@ -546,65 +603,69 @@
                     filterRestaurants();
                 });
             });
-            
+
             // Filtrar restaurantes según los filtros seleccionados
             const searchInput = document.getElementById('search-restaurant');
             const filterCategory = document.getElementById('filter-category');
             const filterRating = document.getElementById('filter-rating');
             const filterDeliveryTime = document.getElementById('filter-delivery-time');
             const sortBy = document.getElementById('sort-by');
-            
+
             searchInput.addEventListener('input', filterRestaurants);
             filterCategory.addEventListener('change', filterRestaurants);
             filterRating.addEventListener('change', filterRestaurants);
             filterDeliveryTime.addEventListener('change', filterRestaurants);
             sortBy.addEventListener('change', filterRestaurants);
-            
+
             function filterRestaurants() {
                 const searchTerm = searchInput.value.toLowerCase();
                 const category = filterCategory.value;
                 const rating = parseFloat(filterRating.value) || 0;
                 const deliveryTime = parseInt(filterDeliveryTime.value) || 999;
                 const sort = sortBy.value;
-                
+
                 const allRestaurants = document.querySelectorAll('.restaurant-card');
-                
+
                 allRestaurants.forEach(restaurant => {
                     const restaurantName = restaurant.querySelector('h4').textContent.toLowerCase();
                     const restaurantCategory = restaurant.getAttribute('data-category');
                     const restaurantRating = parseFloat(restaurant.getAttribute('data-rating'));
                     const restaurantDeliveryTime = parseInt(restaurant.getAttribute('data-delivery-time'));
-                    
+
                     const matchesSearch = restaurantName.includes(searchTerm);
                     const matchesCategory = category === '' || restaurantCategory === category;
                     const matchesRating = restaurantRating >= rating;
                     const matchesDeliveryTime = restaurantDeliveryTime <= deliveryTime;
-                    
+
                     if (matchesSearch && matchesCategory && matchesRating && matchesDeliveryTime) {
                         restaurant.classList.remove('hidden');
                     } else {
                         restaurant.classList.add('hidden');
                     }
                 });
-                
+
                 // Ordenar restaurantes
                 const restaurantContainer = document.getElementById('all-restaurants');
                 const restaurants = Array.from(restaurantContainer.children);
-                
+
                 restaurants.sort((a, b) => {
                     if (sort === 'rating') {
-                        return parseFloat(b.getAttribute('data-rating')) - parseFloat(a.getAttribute('data-rating'));
+                        return parseFloat(b.getAttribute('data-rating')) - parseFloat(a.getAttribute(
+                            'data-rating'));
                     } else if (sort === 'delivery-time') {
-                        return parseInt(a.getAttribute('data-delivery-time')) - parseInt(b.getAttribute('data-delivery-time'));
+                        return parseInt(a.getAttribute('data-delivery-time')) - parseInt(b.getAttribute(
+                            'data-delivery-time'));
                     } else if (sort === 'min-order') {
-                        const aOrder = parseFloat(a.querySelector('span:last-of-type').textContent.replace('Pedido mínimo: S/. ', ''));
-                        const bOrder = parseFloat(b.querySelector('span:last-of-type').textContent.replace('Pedido mínimo: S/. ', ''));
+                        const aOrder = parseFloat(a.querySelector('span:last-of-type').textContent.replace(
+                            'Pedido mínimo: Bs. ', ''));
+                        const bOrder = parseFloat(b.querySelector('span:last-of-type').textContent.replace(
+                            'Pedido mínimo: Bs. ', ''));
                         return aOrder - bOrder;
                     } else { // popular (default)
                         return 0; // Mantener el orden actual
                     }
                 });
-                
+
                 // Reordenar los elementos en el DOM
                 restaurants.forEach(restaurant => {
                     restaurantContainer.appendChild(restaurant);

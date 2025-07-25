@@ -36,7 +36,7 @@
                                         Pedido #{{ $pago->id_pedido }}
                                     </a>
                                 </td>
-                                <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">S/
+                                <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">Bs
                                     {{ number_format($pago->monto, 2) }}</td>
                                 <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ ucfirst($pago->metodo_pago) }}</td>
