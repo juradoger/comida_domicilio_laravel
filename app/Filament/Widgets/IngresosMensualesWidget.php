@@ -65,7 +65,7 @@ class IngresosMensualesWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Ingresos (COP)',
+                    'label' => 'Ingresos (Bs)',
                     'data' => $chartData,
                     'backgroundColor' => 'rgba(34, 197, 94, 0.2)',
                     'borderColor' => 'rgb(34, 197, 94)',
@@ -95,7 +95,7 @@ class IngresosMensualesWidget extends ChartWidget
                 'y' => [
                     'beginAtZero' => true,
                     'ticks' => [
-                        'callback' => 'function(value) { return "$" + value.toLocaleString(); }',
+                        'callback' => 'function(value) { return "Bs " + value.toLocaleString(); }',
                     ],
                 ],
             ],

@@ -22,6 +22,12 @@ class AuthControllers extends Controller
             'password' => ['required'],
         ]);
 
+        $user = User::where('email', $credentials['email'])->first();
+        if ($user && $user->estado === 'inactivo') {
+            return back()->withErrors([
+                'email' => 'Esta cuenta no existe o ha sido eliminada.'
+            ]);
+        }
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
@@ -77,6 +83,6 @@ class AuthControllers extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect()->route('login'); // Redirige siempre a la ruta de login principal
     }
 }

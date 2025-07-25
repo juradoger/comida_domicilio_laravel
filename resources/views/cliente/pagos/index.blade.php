@@ -52,8 +52,10 @@
                                 <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $pago->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="py-4 px-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ route('cliente.pagos.ver', $pago->id) }}"
-                                        class="text-indigo-600 hover:text-indigo-900">Ver detalles</a>
+                                    <a href="{{ route('cliente.pagos.show', $pago->id) }}"
+                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200">
+                                        Ver detalles
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

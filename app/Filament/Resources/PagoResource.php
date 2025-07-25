@@ -50,7 +50,9 @@ class PagoResource extends Resource
                 Tables\Columns\TextColumn::make('metodo_pago')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('monto')
-                    ->numeric()
+                    ->label('Monto (Bs)')
+                    ->formatStateUsing(fn ($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
+                    ->html()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('estado_pago')
                     ->searchable(),

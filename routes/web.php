@@ -14,9 +14,7 @@ use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\AdminController;
 
 // Ruta raíz opcional (si deseas mostrar bienvenida)
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 // Rutas de autenticación
 Route::get('/login', [AuthControllers::class, 'showLogin'])->name('login');
@@ -75,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
         // Perfil del cliente
         Route::get('/perfil', [ClienteController::class, 'editarPerfil'])->name('perfil.edit');
         Route::put('/perfil', [ClienteController::class, 'actualizarPerfil'])->name('perfil.update');
+        Route::delete('/perfil', [ClienteController::class, 'eliminarPerfil'])->name('perfil.destroy');
 
         Route::get('/envio', function () {
             return view('cliente.envio');
@@ -84,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pagos', [PagoController::class, 'index'])->name('pagos.index');
         Route::get('/pagos/crear', [PagoController::class, 'create'])->name('pagos.crear');
         Route::post('/pagos', [PagoController::class, 'store'])->name('pagos.guardar');
-        Route::get('/pagos/{pago}', [PagoController::class, 'show'])->name('pagos.ver');
+        Route::get('/pagos/{pago}', [PagoController::class, 'show'])->name('pagos.show');
 
         // Rutas para calificaciones (cliente)
         Route::get('/calificaciones', [CalificacionController::class, 'index'])->name('calificaciones.index');

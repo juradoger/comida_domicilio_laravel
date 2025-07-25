@@ -12,9 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Para PostgreSQL, necesitamos usar SQL raw para modificar el enum
-        DB::statement("ALTER TABLE pagos DROP CONSTRAINT IF EXISTS pagos_metodo_pago_check");
-        DB::statement("ALTER TABLE pagos ADD CONSTRAINT pagos_metodo_pago_check CHECK (metodo_pago IN ('efectivo', 'tarjeta', 'transferencia', 'yape'))");
+        // Modificar el ENUM directamente para MySQL
+        DB::statement("ALTER TABLE pagos MODIFY COLUMN metodo_pago ENUM('efectivo', 'tarjeta', 'transferencia', 'yape') NOT NULL");
     }
 
     /**
@@ -22,8 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revertir al estado anterior
-        DB::statement("ALTER TABLE pagos DROP CONSTRAINT IF EXISTS pagos_metodo_pago_check");
-        DB::statement("ALTER TABLE pagos ADD CONSTRAINT pagos_metodo_pago_check CHECK (metodo_pago IN ('efectivo', 'tarjeta', 'transferencia', 'qr'))");
+        // Revertir el ENUM al estado anterior
+        DB::statement("ALTER TABLE pagos MODIFY COLUMN metodo_pago ENUM('efectivo', 'tarjeta', 'transferencia', 'qr') NOT NULL");
     }
 };

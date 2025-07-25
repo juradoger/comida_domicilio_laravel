@@ -94,7 +94,7 @@
 
                     <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
                         <a href="{{ route('cliente.pedidos.show', $pedido->id) }}"
-                            class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded-md transition duration-300 inline-block">
+                           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200">
                             Ver Detalles del Pedido
                         </a>
                         <a href="{{ route('cliente.menu') }}"

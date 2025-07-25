@@ -1,0 +1,1 @@
+<span class="text-xs align-top">Bs</span> {{ number_format($producto->precio, 2, '.', ',') }} 

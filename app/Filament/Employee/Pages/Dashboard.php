@@ -8,8 +8,6 @@ class Dashboard extends BaseDashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    protected static string $view = '';
-
     public function getTitle(): string
     {
         return 'Panel de Empleados - Dashboard';

@@ -12,9 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Para PostgreSQL necesitamos usar SQL raw para modificar el enum
-        DB::statement("ALTER TABLE pedidos DROP CONSTRAINT IF EXISTS pedidos_estado_check");
-        DB::statement("ALTER TABLE pedidos ADD CONSTRAINT pedidos_estado_check CHECK (estado IN ('pendiente', 'en_preparacion', 'en_camino', 'entregado', 'cancelado'))");
+        // Modificar el ENUM directamente para MySQL
+        DB::statement("ALTER TABLE pedidos MODIFY COLUMN estado ENUM('pendiente', 'en_preparacion', 'en_camino', 'entregado', 'cancelado') NOT NULL");
     }
 
     /**
@@ -22,8 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revertir al enum original
-        DB::statement("ALTER TABLE pedidos DROP CONSTRAINT IF EXISTS pedidos_estado_check");
-        DB::statement("ALTER TABLE pedidos ADD CONSTRAINT pedidos_estado_check CHECK (estado IN ('pendiente', 'en_camino', 'entregado'))");
+        // Revertir el ENUM al estado anterior
+        DB::statement("ALTER TABLE pedidos MODIFY COLUMN estado ENUM('pendiente', 'en_camino', 'entregado') NOT NULL");
     }
 };

@@ -44,7 +44,8 @@
                             
                             @if($notificacion->enlace)
                                 <div class="mt-4">
-                                    <a href="{{ $notificacion->enlace }}" class="text-indigo-600 hover:text-indigo-900 font-medium">
+                                    <a href="{{ route('cliente.notificaciones.show', $notificacion->id) }}"
+                                       class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200">
                                         Ver detalles
                                     </a>
                                 </div>

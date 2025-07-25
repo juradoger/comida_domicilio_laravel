@@ -14,7 +14,7 @@ class PagoFactory extends Factory
     {
         return [
             'id_pedido' => Pedido::factory(),
-            'metodo_pago' => $this->faker->randomElement(['efectivo', 'tarjeta', 'transferencia', 'qr']),
+            'metodo_pago' => $this->faker->randomElement(['efectivo', 'tarjeta', 'transferencia', 'yape']),
             'monto' => $this->faker->randomFloat(2, 10, 1000),
             'estado_pago' => $this->faker->randomElement(['pendiente', 'pagado', 'fallido']),
         ];

@@ -38,9 +38,9 @@ class EstadisticasGeneralesWidget extends BaseWidget
                 ->color('primary')
                 ->chart([7, 4, 8, 12, 15, 10, $pedidosHoy]),
 
-            Stat::make('Ventas del Día', '$' . number_format($ventasHoy, 0, ',', '.'))
-                ->description('Ingresos de hoy')
-                ->descriptionIcon('heroicon-o-currency-dollar')
+            Stat::make('Ventas del Día', 'Bs ' . number_format($ventasHoy, 2, '.', ','))
+                ->description('Ingresos de hoy (Bolivianos)')
+                ->descriptionIcon('heroicon-o-banknotes')
                 ->color('success')
                 ->chart([200, 180, 250, 300, 280, 350, $ventasHoy]),
 

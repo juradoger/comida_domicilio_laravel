@@ -45,18 +45,18 @@ class PedidoResource extends Resource
                 Forms\Components\TextInput::make('total')
                     ->required()
                     ->numeric()
-                    ->prefix('$')
-                    ->label('Total'),
+                    ->prefix('Bs')
+                    ->label('Total (Bs)'),
                 Forms\Components\TextInput::make('subtotal')
                     ->required()
                     ->numeric()
-                    ->prefix('$')
-                    ->label('Subtotal'),
+                    ->prefix('Bs')
+                    ->label('Subtotal (Bs)'),
                 Forms\Components\TextInput::make('costo_envio')
                     ->required()
                     ->numeric()
-                    ->prefix('$')
-                    ->label('Costo de Envío'),
+                    ->prefix('Bs')
+                    ->label('Costo de Envío (Bs)'),
                 Forms\Components\DateTimePicker::make('fecha_entrega')
                     ->required()
                     ->label('Fecha de Entrega'),
@@ -91,9 +91,9 @@ class PedidoResource extends Resource
                     ->badge()
                     ->color('info'),
                 Tables\Columns\TextColumn::make('total')
-                    ->money('USD')
-                    ->sortable()
-                    ->label('Total'),
+                    ->label('Total (Bs)')
+                    ->formatStateUsing(fn ($state) => 'Bs ' . number_format($state, 2, '.', ','))
+                    ->sortable(),
                 Tables\Columns\BadgeColumn::make('estado')
                     ->colors([
                         'secondary' => 'pendiente',

@@ -110,8 +110,9 @@ class ProductoResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('precio')
-                    ->label('Precio')
-                    ->money('BOB')
+                    ->label('Precio (Bs)')
+                    ->formatStateUsing(fn ($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
+                    ->html()
                     ->sortable(),
 
                 TextColumn::make('stock')

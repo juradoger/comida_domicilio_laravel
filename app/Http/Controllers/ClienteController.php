@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Pedido;
@@ -243,6 +242,18 @@ class ClienteController extends Controller
 
         return redirect()->route('cliente.perfil.edit')
             ->with('success', 'Perfil actualizado exitosamente.');
+    }
+
+    /**
+     * Elimina el perfil del cliente.
+     */
+    public function eliminarPerfil()
+    {
+        $user = Auth::user();
+        $user->estado = 'inactivo';
+        $user->save();
+        Auth::logout();
+        return redirect()->route('login')->withErrors(['email' => 'Tu cuenta ha sido eliminada lógicamente.']);
     }
 
     /**

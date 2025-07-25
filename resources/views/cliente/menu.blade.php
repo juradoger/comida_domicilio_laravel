@@ -71,7 +71,9 @@
                         @endif
                         <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $producto->descripcion }}</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-orange-600 font-bold">${{ number_format($producto->precio, 2) }}</span>
+                            <span class="text-orange-600 font-bold">
+                                <span class="text-xs align-top">Bs</span> {{ number_format($producto->precio, 2, '.', ',') }}
+                            </span>
                             <div class="flex items-center gap-2">
                                 <input type="number" id="cantidad-{{ $producto->id }}" value="1" min="1"
                                     max="10" class="border rounded px-2 py-1 w-16 text-center">

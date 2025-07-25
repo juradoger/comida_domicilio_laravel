@@ -110,7 +110,9 @@
                                     @endif
                                     {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}
                                 </span>
-                                <p class="text-lg font-bold text-gray-800 mt-2">${{ number_format($pedido->total, 2) }}</p>
+                                <p class="text-lg font-bold text-gray-800 mt-2">
+                                    <span class="text-xs align-top">Bs</span> {{ number_format($pedido->total, 2, '.', ',') }}
+                                </p>
                             </div>
                         </div>
 
@@ -163,7 +165,7 @@
 
                             <div class="space-x-2">
                                 <a href="{{ route('cliente.pedidos.show', $pedido->id) }}"
-                                    class="px-4 py-2 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 transition">
+                                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200">
                                     Ver detalles
                                 </a>
                                 @if ($pedido->estado == 'entregado')

@@ -104,8 +104,9 @@ class PedidoResource extends Resource
                     ->placeholder('Sin asignar'),
 
                 TextColumn::make('total')
-                    ->label('Total')
-                    ->money('BOB')
+                    ->label('Total (Bs)')
+                    ->formatStateUsing(fn ($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
+                    ->html()
                     ->sortable(),
 
                 TextColumn::make('fecha_entrega')
