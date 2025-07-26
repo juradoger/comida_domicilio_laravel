@@ -20,7 +20,7 @@ class EstadoPedidosWidget extends ChartWidget
         $colors = [
             'pendiente' => '#f59e0b',
             'confirmado' => '#3b82f6',
-            'en_preparacion' => '#8b5cf6',
+            'aceptado' => '#8b5cf6',
             'en_camino' => '#06b6d4',
             'entregado' => '#10b981',
             'cancelado' => '#ef4444',

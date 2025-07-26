@@ -63,7 +63,7 @@ class PedidoResource extends Resource
                 Forms\Components\Select::make('estado')
                     ->options([
                         'pendiente' => 'Pendiente',
-                        'en_preparacion' => 'En Preparación',
+                        'aceptado' => 'Aceptado',
                         'en_camino' => 'En Camino',
                         'entregado' => 'Entregado',
                         'cancelado' => 'Cancelado',
@@ -92,19 +92,19 @@ class PedidoResource extends Resource
                     ->color('info'),
                 Tables\Columns\TextColumn::make('total')
                     ->label('Total (Bs)')
-                    ->formatStateUsing(fn ($state) => 'Bs ' . number_format($state, 2, '.', ','))
+                    ->formatStateUsing(fn($state) => 'Bs ' . number_format($state, 2, '.', ','))
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('estado')
                     ->colors([
                         'secondary' => 'pendiente',
-                        'warning' => 'en_preparacion',
+                        'warning' => 'aceptado',
                         'primary' => 'en_camino',
                         'success' => 'entregado',
                         'danger' => 'cancelado',
                     ])
                     ->formatStateUsing(fn(string $state): string => match ($state) {
                         'pendiente' => 'Pendiente',
-                        'en_preparacion' => 'En Preparación',
+                        'aceptado' => 'Aceptado',
                         'en_camino' => 'En Camino',
                         'entregado' => 'Entregado',
                         'cancelado' => 'Cancelado',
@@ -125,7 +125,7 @@ class PedidoResource extends Resource
                 Tables\Filters\SelectFilter::make('estado')
                     ->options([
                         'pendiente' => 'Pendiente',
-                        'en_preparacion' => 'En Preparación',
+                        'aceptado' => 'Aceptado',
                         'en_camino' => 'En Camino',
                         'entregado' => 'Entregado',
                         'cancelado' => 'Cancelado',
@@ -162,7 +162,7 @@ class PedidoResource extends Resource
                             Forms\Components\Select::make('estado')
                                 ->options([
                                     'pendiente' => 'Pendiente',
-                                    'en_preparacion' => 'En Preparación',
+                                    'aceptado' => 'Aceptado',
                                     'en_camino' => 'En Camino',
                                     'entregado' => 'Entregado',
                                     'cancelado' => 'Cancelado',

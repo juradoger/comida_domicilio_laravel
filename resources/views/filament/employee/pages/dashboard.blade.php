@@ -30,7 +30,7 @@
                 <div class="ml-4">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white">Pedidos Activos</h3>
                     <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {{ $empleadoId? \App\Models\Pedido::whereIn('estado', ['pendiente', 'en_preparacion', 'en_camino'])->where('id_empleado', $empleadoId)->count(): 0 }}
+                        {{ $empleadoId? \App\Models\Pedido::whereIn('estado', ['pendiente', 'aceptado', 'en_camino'])->where('id_empleado', $empleadoId)->count(): 0 }}
                     </p>
                 </div>
             </div>

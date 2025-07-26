@@ -41,7 +41,7 @@ class PedidoSeeder extends Seeder
                 'subtotal' => 0, // Lo calcularemos después
                 'costo_envio' => fake()->randomFloat(2, 5, 15),
                 'fecha_entrega' => fake()->dateTimeBetween('+1 days', '+7 days'),
-                'estado' => fake()->randomElement(['pendiente', 'en_preparacion', 'en_camino', 'entregado', 'cancelado']),
+                'estado' => fake()->randomElement(['pendiente', 'aceptado', 'en_camino', 'entregado', 'cancelado']),
             ]);
 
             // Crear entre 2 y 6 detalles de pedido para cada pedido

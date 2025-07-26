@@ -29,14 +29,14 @@
                 <span
                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                     {{ $pedido->estado === 'pendiente' ? 'bg-gray-100 text-gray-800' : '' }}
-                    {{ $pedido->estado === 'en_preparacion' ? 'bg-yellow-100 text-yellow-800' : '' }}
+                    {{ $pedido->estado === 'aceptado' ? 'bg-yellow-100 text-yellow-800' : '' }}
                     {{ $pedido->estado === 'en_camino' ? 'bg-blue-100 text-blue-800' : '' }}
                     {{ $pedido->estado === 'entregado' ? 'bg-green-100 text-green-800' : '' }}
                     {{ $pedido->estado === 'cancelado' ? 'bg-red-100 text-red-800' : '' }}
                 ">
                     {{ match ($pedido->estado) {
                         'pendiente' => 'Pendiente',
-                        'en_preparacion' => 'En Preparación',
+                        'aceptado' => 'Aceptado',
                         'en_camino' => 'En Camino',
                         'entregado' => 'Entregado',
                         'cancelado' => 'Cancelado',
@@ -128,25 +128,25 @@
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
             <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 17V7a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m-6 0v2a2 2 0 002 2h2a2 2 0 002-2v-2m-6 0V7m6 10V7" />
+                    d="M9 17V7a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m-6 0v2a2 2 0 002 2h2a2 2 0 002-2v-2m-6 0V7m6 10V7" />
             </svg>
             Resumen de Costos
         </h3>
         <div class="space-y-3">
             <div class="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-600">
                 <span class="text-gray-700 dark:text-gray-300">Subtotal:</span>
-                <span
-                    class="font-semibold text-gray-900 dark:text-white">Bs. {{ number_format($pedido->subtotal, 2) }}</span>
+                <span class="font-semibold text-gray-900 dark:text-white">Bs.
+                    {{ number_format($pedido->subtotal, 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-600">
                 <span class="text-gray-700 dark:text-gray-300">Costo de Envío:</span>
-                <span
-                    class="font-semibold text-gray-900 dark:text-white">Bs. {{ number_format($pedido->costo_envio, 2) }}</span>
+                <span class="font-semibold text-gray-900 dark:text-white">Bs.
+                    {{ number_format($pedido->costo_envio, 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-3 border-t-2 border-gray-300 dark:border-gray-600">
                 <span class="text-lg font-bold text-gray-900 dark:text-white">Total:</span>
-                <span
-                    class="text-xl font-bold text-green-600 dark:text-green-400">Bs. {{ number_format($pedido->total, 2) }}</span>
+                <span class="text-xl font-bold text-green-600 dark:text-green-400">Bs.
+                    {{ number_format($pedido->total, 2) }}</span>
             </div>
         </div>
     </div>

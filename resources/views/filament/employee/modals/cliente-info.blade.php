@@ -113,7 +113,7 @@
                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                     @switch($pedido->estado)
                         @case('pendiente') bg-gray-100 text-gray-800 @break
-                        @case('en_preparacion') bg-yellow-100 text-yellow-800 @break
+                        @case('aceptado') bg-yellow-100 text-yellow-800 @break
                         @case('en_camino') bg-blue-100 text-blue-800 @break
                         @case('entregado') bg-green-100 text-green-800 @break
                         @case('cancelado') bg-red-100 text-red-800 @break
@@ -125,8 +125,8 @@
                             Pendiente
                         @break
 
-                        @case('en_preparacion')
-                            En Preparación
+                        @case('aceptado')
+                            Aceptado
                         @break
 
                         @case('en_camino')

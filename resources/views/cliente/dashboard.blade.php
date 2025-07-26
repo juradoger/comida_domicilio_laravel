@@ -2,17 +2,20 @@
 
 @section('title', 'Dashboard - Cliente')
 @section('header')
-<div class="relative min-h-[80vh] md:min-h-[90vh] w-full flex items-center justify-center overflow-hidden mb-10" style="
+    <div class="relative min-h-[80vh] md:min-h-[90vh] w-full flex items-center justify-center overflow-hidden mb-10"
+        style="
 background: linear-gradient(135deg, rgba(234,88,12,0.7) 0%, rgba(251,146,60,0.5) 100%),
             url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
 margin: 0; padding: 0; border-radius: 0; box-shadow: none;
 ">
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="relative z-10 flex flex-col items-center text-center w-full px-4 md:px-0">
-    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 text-white drop-shadow-lg">¡Bienvenido, {{ Auth::user()->name }}!</h1>
-    <p class="text-2xl md:text-3xl text-white/90 font-medium mb-4">Disfruta de los mejores platos desde la comodidad de tu hogar</p>
-</div>
-</div>
+        <div class="absolute inset-0 bg-black/10"></div>
+        <div class="relative z-10 flex flex-col items-center text-center w-full px-4 md:px-0">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 text-white drop-shadow-lg">¡Bienvenido,
+                {{ Auth::user()->name }}!</h1>
+            <p class="text-2xl md:text-3xl text-white/90 font-medium mb-4">Disfruta de los mejores platos desde la comodidad
+                de tu hogar</p>
+        </div>
+    </div>
 @endsection
 
 @section('content')
@@ -137,13 +140,14 @@ margin: 0; padding: 0; border-radius: 0; box-shadow: none;
                                 <div>
                                     <p class="font-medium text-gray-800">Pedido #{{ $pedido->id }}</p>
                                     <p class="text-sm text-gray-600">{{ $pedido->created_at->format('d/m/Y H:i') }}</p>
-                                    <p class="text-sm text-gray-600">Total: <span class="text-xs align-top">Bs. </span>{{ number_format($pedido->total, 2, '.', ',') }}</p>
+                                    <p class="text-sm text-gray-600">Total: <span class="text-xs align-top">Bs.
+                                        </span>{{ number_format($pedido->total, 2, '.', ',') }}</p>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <span
                                         class="px-3 py-1 rounded-full text-xs font-medium
                             @if ($pedido->estado == 'pendiente') bg-yellow-100 text-yellow-800
-                            @elseif($pedido->estado == 'en_preparacion') bg-blue-100 text-blue-800
+                            @elseif($pedido->estado == 'aceptado') bg-blue-100 text-blue-800
                             @elseif($pedido->estado == 'en_camino') bg-orange-100 text-orange-800
                             @elseif($pedido->estado == 'entregado') bg-green-100 text-green-800
                             @else bg-gray-100 text-gray-800 @endif">
@@ -165,7 +169,7 @@ margin: 0; padding: 0; border-radius: 0; box-shadow: none;
                     @endforeach
                 </div>
                 <a href="{{ route('cliente.pedidos.index') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200 ml-auto mt-4">
+                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[var(--color-primario)] to-[var(--color-secundario)] text-white font-semibold rounded-lg shadow hover:from-[var(--color-secundario)] hover:to-[var(--color-primario)] transition-colors duration-200 ml-auto mt-4">
                     Ver todos
                 </a>
             </div>

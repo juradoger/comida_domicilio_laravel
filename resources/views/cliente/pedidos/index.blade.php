@@ -31,9 +31,9 @@
                     class="px-4 py-2 rounded-full {{ request('estado') == 'pendiente' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} transition">
                     Pendiente
                 </a>
-                <a href="{{ route('cliente.pedidos.index', ['estado' => 'en_preparacion']) }}"
-                    class="px-4 py-2 rounded-full {{ request('estado') == 'en_preparacion' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} transition">
-                    En Preparación
+                <a href="{{ route('cliente.pedidos.index', ['estado' => 'aceptado']) }}"
+                    class="px-4 py-2 rounded-full {{ request('estado') == 'aceptado' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} transition">
+                    Aceptado
                 </a>
                 <a href="{{ route('cliente.pedidos.index', ['estado' => 'en_camino']) }}"
                     class="px-4 py-2 rounded-full {{ request('estado') == 'en_camino' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }} transition">
@@ -79,7 +79,7 @@
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                             @if ($pedido->estado == 'pendiente') bg-yellow-100 text-yellow-800
-                            @elseif($pedido->estado == 'en_preparacion') bg-blue-100 text-blue-800
+                            @elseif($pedido->estado == 'aceptado') bg-blue-100 text-blue-800
                             @elseif($pedido->estado == 'en_camino') bg-orange-100 text-orange-800
                             @elseif($pedido->estado == 'entregado') bg-green-100 text-green-800
                             @else bg-gray-100 text-gray-800 @endif">
@@ -89,7 +89,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                    @elseif($pedido->estado == 'en_preparacion')
+                                    @elseif($pedido->estado == 'aceptado')
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -111,7 +111,8 @@
                                     {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}
                                 </span>
                                 <p class="text-lg font-bold text-gray-800 mt-2">
-                                    <span class="text-xs align-top">Bs</span> {{ number_format($pedido->total, 2, '.', ',') }}
+                                    <span class="text-xs align-top">Bs</span>
+                                    {{ number_format($pedido->total, 2, '.', ',') }}
                                 </p>
                             </div>
                         </div>

@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         // Modificar el ENUM directamente para MySQL
-        DB::statement("ALTER TABLE pedidos MODIFY COLUMN estado ENUM('pendiente', 'en_preparacion', 'en_camino', 'entregado', 'cancelado') NOT NULL");
+        DB::statement("ALTER TABLE pedidos MODIFY COLUMN estado ENUM('pendiente', 'aceptado', 'en_camino', 'entregado', 'cancelado') NOT NULL");
     }
 
     /**

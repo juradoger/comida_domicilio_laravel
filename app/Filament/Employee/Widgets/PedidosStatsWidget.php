@@ -19,7 +19,7 @@ class PedidosStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
 
-            Stat::make('En Preparación', Pedido::where('estado', 'en_preparacion')->where('id_empleado', $empleadoId)->count())
+            Stat::make('Aceptado', Pedido::where('estado', 'aceptado')->where('id_empleado', $empleadoId)->count())
                 ->description('Pedidos siendo preparados')
                 ->descriptionIcon('heroicon-m-cog-6-tooth')
                 ->color('info'),
