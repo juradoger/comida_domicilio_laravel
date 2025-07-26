@@ -12,9 +12,10 @@ use App\Http\Controllers\RepartoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 
 // Ruta raíz opcional (si deseas mostrar bienvenida)
-Route::redirect('/', '/login');
+//Route::redirect('/', '/login');
 
 // Rutas de autenticación
 Route::get('/login', [AuthControllers::class, 'showLogin'])->name('login');
@@ -22,6 +23,10 @@ Route::post('/login', [AuthControllers::class, 'login'])->name('login.submit');
 Route::get('/register', [AuthControllers::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthControllers::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthControllers::class, 'logout'])->name('logout');
+
+
+Route::get('/', [HomeController::class, 'dashboard'])->name('inicio');
+Route::get('/menu', [HomeController::class, 'menu'])->name('menuGuess');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
