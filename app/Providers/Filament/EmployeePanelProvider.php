@@ -28,7 +28,7 @@ class EmployeePanelProvider extends PanelProvider
             ->path('empleado')
             // ->login() // Eliminado para usar solo el login principal
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Orange,
             ])
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
@@ -56,7 +56,7 @@ class EmployeePanelProvider extends PanelProvider
                 Authenticate::class,
                 EmployeePanelAccess::class,
             ])
-            ->brandName('Panel de Empleados')
+            ->brandLogo('/images/logo.png')
             ->favicon(asset('favicon.ico'));
     }
 }

@@ -11,22 +11,28 @@
 
 /* === Paleta de colores principal === */
 :root {
-  --color-primario: #C1272D;      /* rojo cereza */
-  --color-secundario: #E63946;    /* rojo vibrante */
-  --color-acento: #F4A261;        /* mostaza */
-  --color-fondo: #FAF5EF;         /* crema */
-  --color-texto: #333333;         /* gris oscuro */
-  --color-enfasis: #2A9D8F;       /* verde aguamarina */
+    --color-primario: #C1272D;
+    /* rojo cereza */
+    --color-secundario: #E63946;
+    /* rojo vibrante */
+    --color-acento: #F4A261;
+    /* mostaza */
+    --color-fondo: #FAF5EF;
+    /* crema */
+    --color-texto: #333333;
+    /* gris oscuro */
+    --color-enfasis: #2A9D8F;
+    /* verde aguamarina */
 }
 
 @theme {
     /* Fuente principal moderna para UI */
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    
+
     /* Fuente elegante para títulos */
     --font-serif: 'Playfair Display', Georgia, serif;
-    
+
     /* Fuente cursiva para acentos */
     --font-cursive: 'Dancing Script', cursive;
 }
@@ -38,4 +44,9 @@
 
 .font-cursive {
     font-family: var(--font-cursive);
+}
+
+
+.fi-topbar nav {
+    background-color: red !important;
 }
