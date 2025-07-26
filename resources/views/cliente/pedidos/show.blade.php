@@ -86,9 +86,10 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <p class="text-gray-800">{{ $pedido->repartidor->nombre }}
-                                                {{ $pedido->repartidor->apellido }}</p>
-                                            <p class="text-sm text-gray-500">{{ $pedido->repartidor->telefono }}</p>
+                                            <p class="text-gray-800">{{ $pedido->repartidor->usuario->name }}
+                                                {{ $pedido->repartidor->usuario->apellido }}</p>
+                                            <p class="text-sm text-gray-500">{{ $pedido->repartidor->usuario->telefono }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

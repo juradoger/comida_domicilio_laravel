@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2);
             $table->decimal('costo_envio', 10, 2);
             $table->dateTime('fecha_entrega');
+            //metodo_pago
+            $table->string('metodo_pago')->nullable();
             $table->enum('estado', ['pendiente', 'en_camino', 'entregado'])->default('pendiente');
             $table->timestamps();
         });

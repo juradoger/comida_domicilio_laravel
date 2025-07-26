@@ -153,6 +153,7 @@ class ClienteController extends Controller
             'subtotal' => $subtotal,
             'costo_envio' => $costoEnvio,
             'total' => $total,
+            'metodo_pago' => $request->metodo_pago,
             'fecha_entrega' => now()->addHours(1), // Estimación de entrega en 1 hora
             'estado' => 'pendiente',
         ]);
