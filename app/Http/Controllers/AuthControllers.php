@@ -96,13 +96,26 @@ class AuthControllers extends Controller
             ]);
         }
 
-        return redirect()->route('login')->with('success', 'Usuario registrado correctamente como ' . $request->tipo_registro . '.');
+        // Hacer login automático después del registro y redirigir según el rol
+        Auth::login($user);
+
+        // Redireccionar según el rol del usuario registrado
+        switch ($user->id_rol) {
+            case 1: // Admin
+                return redirect('/admin')->with('success', 'Usuario registrado correctamente como administrador.');
+            case 2: // Empleado
+                return redirect('/empleado')->with('success', 'Usuario registrado correctamente como empleado.');
+            case 3: // Cliente
+                return redirect('/dashboard')->with('success', 'Usuario registrado correctamente como cliente.');
+            default: // Cliente u otros
+                return redirect('/dashboard')->with('success', 'Usuario registrado correctamente.');
+        }
     }
 
     public function showConvertToEmployee()
     {
         $user = Auth::user();
-        
+
         // Verificar que el usuario sea cliente
         if ($user->id_rol !== 3) {
             return redirect()->back()->with('error', 'Solo los clientes pueden convertirse en empleados.');
@@ -114,7 +127,7 @@ class AuthControllers extends Controller
     public function convertToEmployee(Request $request)
     {
         $user = Auth::user();
-        
+
         // Verificar que el usuario sea cliente
         if ($user->id_rol !== 3) {
             return redirect()->back()->with('error', 'Solo los clientes pueden convertirse en empleados.');

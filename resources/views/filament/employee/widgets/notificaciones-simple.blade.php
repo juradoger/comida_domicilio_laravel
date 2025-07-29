@@ -37,12 +37,10 @@
 
                         @if (!$notificacion->leido)
                             <div class="flex-shrink-0">
-                                <form action="{{ route('cliente.api.notificaciones.leida', $notificacion->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <x-filament::button size="xs" color="primary" type="submit">
-                                        Marcar leída
-                                    </x-filament::button>
-                                </form>
+                                <x-filament::button size="xs" color="primary"
+                                    wire:click="marcarComoLeida({{ $notificacion->id }})" wire:loading.attr="disabled">
+                                    Marcar leída
+                                </x-filament::button>
                             </div>
                         @endif
                     </div>

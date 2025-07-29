@@ -111,7 +111,7 @@ class ProductoResource extends Resource
 
                 TextColumn::make('precio')
                     ->label('Precio (Bs)')
-                    ->formatStateUsing(fn ($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
+                    ->formatStateUsing(fn($state) => '<span class="text-xs align-top">Bs</span> ' . number_format($state, 2, '.', ','))
                     ->html()
                     ->sortable(),
 
@@ -182,6 +182,7 @@ class ProductoResource extends Resource
         return [
             'index' => Pages\ListProductos::route('/'),
             'create' => Pages\CreateProducto::route('/create'),
+            'view' => Pages\ViewProducto::route('/{record}'),
             'edit' => Pages\EditProducto::route('/{record}/edit'),
         ];
     }

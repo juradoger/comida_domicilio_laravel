@@ -17,7 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\AdminOrEmployeeAccess;
+use App\Http\Middleware\AdminAccess;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->brandLogo('/images/logo.png')
+            ->brandLogoHeight('3rem')
             // ->login() // Eliminado para usar solo el login principal
             ->colors([
                 'primary' => Color::Orange,
@@ -53,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                AdminOrEmployeeAccess::class,
+                AdminAccess::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

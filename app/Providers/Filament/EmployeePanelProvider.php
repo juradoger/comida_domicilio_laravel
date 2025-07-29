@@ -59,6 +59,7 @@ class EmployeePanelProvider extends PanelProvider
                 EmployeePanelAccess::class,
             ])
             ->brandLogo('/images/logo.png')
+            ->brandLogoHeight('3rem')
             ->favicon(asset('favicon.ico'));
     }
 }

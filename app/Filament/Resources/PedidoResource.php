@@ -199,9 +199,14 @@ class PedidoResource extends Resource
     {
         return [
             'index' => Pages\ListPedidos::route('/'),
-            'create' => Pages\CreatePedido::route('/create'),
-            //     'view' => Pages\ViewPedido::route('/{record}'),
+            // 'create' => Pages\CreatePedido::route('/create'), // Eliminado para que admin no pueda crear pedidos
+            'view' => Pages\ViewPedido::route('/{record}'),
             'edit' => Pages\EditPedido::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false; // Los administradores no pueden crear pedidos
     }
 }

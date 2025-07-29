@@ -7,6 +7,9 @@ use App\Filament\Widgets\PedidosPorMesWidget;
 use App\Filament\Widgets\EstadoPedidosWidget;
 use App\Filament\Widgets\ProductosMasVendidosWidget;
 use App\Filament\Widgets\IngresosMensualesWidget;
+use App\Filament\Admin\Widgets\StockBajoWidget;
+use App\Filament\Admin\Widgets\NotificacionesBandejaWidget;
+use App\Filament\Admin\Widgets\NotificacionesWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -18,6 +21,9 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            StockBajoWidget::class,
+            NotificacionesBandejaWidget::class,
+            NotificacionesWidget::class,
             EstadisticasGeneralesWidget::class,
             PedidosPorMesWidget::class,
             EstadoPedidosWidget::class,

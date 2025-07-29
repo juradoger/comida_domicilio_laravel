@@ -32,7 +32,7 @@ class ProductoObserver
             return;
         }
 
-        // Obtener todos los administradores
+        // Obtener solo los administradores (el control de stock es exclusivo del admin)
         $administradores = User::where('id_rol', 1)->get();
 
         foreach ($administradores as $admin) {
@@ -92,4 +92,4 @@ class ProductoObserver
             ]);
         }
     }
-} 
+}

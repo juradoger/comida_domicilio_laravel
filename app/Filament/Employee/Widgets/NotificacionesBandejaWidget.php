@@ -16,6 +16,11 @@ class NotificacionesBandejaWidget extends Widget
 
     protected int | string | array $columnSpan = 'full';
 
+    protected $listeners = [
+        'notificacion-marcada' => '$refresh',
+        'todas-notificaciones-marcadas' => '$refresh',
+    ];
+
     public function getNotificaciones()
     {
         return Notificacion::where('id_usuario', Auth::id())
@@ -39,18 +44,38 @@ class NotificacionesBandejaWidget extends Widget
 
         if ($notificacion) {
             $notificacion->update(['leido' => true]);
-        }
 
-        $this->dispatch('notificacion-marcada');
+            // Emitir evento para refrescar el widget
+            $this->dispatch('notificacion-marcada');
+
+            // Notificación de éxito
+            \Filament\Notifications\Notification::make()
+                ->title('Notificación marcada como leída')
+                ->success()
+                ->send();
+        }
     }
 
     public function marcarTodasComoLeidas()
     {
-        Notificacion::where('id_usuario', Auth::id())
+        $cantidad = Notificacion::where('id_usuario', Auth::id())
             ->where('leido', false)
-            ->update(['leido' => true]);
+            ->count();
 
-        $this->dispatch('todas-notificaciones-marcadas');
+        if ($cantidad > 0) {
+            Notificacion::where('id_usuario', Auth::id())
+                ->where('leido', false)
+                ->update(['leido' => true]);
+
+            // Emitir evento para refrescar el widget
+            $this->dispatch('todas-notificaciones-marcadas');
+
+            // Notificación de éxito
+            \Filament\Notifications\Notification::make()
+                ->title("$cantidad notificaciones marcadas como leídas")
+                ->success()
+                ->send();
+        }
     }
 
     public function getNotificacionesPorTipo()
@@ -60,4 +85,4 @@ class NotificacionesBandejaWidget extends Widget
             ->groupBy('tipo')
             ->get();
     }
-} 
+}

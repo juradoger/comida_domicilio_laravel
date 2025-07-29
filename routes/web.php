@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cliente/eliminar/{id}', [ClienteController::class, 'adminDestroy'])->name('clientes.eliminar');
 
     // Rutas para el rol de cliente
-    Route::middleware(['role:cliente', 'cliente.access'])->prefix('cliente')->name('cliente.')->group(function () {
+    Route::middleware([\App\Http\Middleware\ClienteAccess::class])->prefix('cliente')->name('cliente.')->group(function () {
         // Dashboard del cliente
         Route::get('/dashboard', [ClienteController::class, 'dashboard'])->name('dashboard');
 
@@ -132,15 +132,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/api/notificaciones', [ClienteController::class, 'obtenerNotificaciones'])->name('api.notificaciones');
         Route::post('/api/notificaciones/{id}/leida', [ClienteController::class, 'marcarNotificacionLeida'])->name('api.notificaciones.leida');
         Route::post('/api/notificaciones/todas-leidas', [ClienteController::class, 'marcarTodasLeidas'])->name('api.notificaciones.todas-leidas');
-        
+
         // Protección para acceso GET a la API de notificaciones
-        Route::get('/api/notificaciones/todas-leidas', function() {
+        Route::get('/api/notificaciones/todas-leidas', function () {
             return redirect()->route('cliente.notificaciones.index')
                 ->with('warning', '⚠️ Esta acción debe realizarse desde el sistema. Redirigiendo a tus notificaciones...');
         })->name('api.notificaciones.todas-leidas.get');
-        
+
         // Protección para acceso GET a marcar notificación individual como leída
-        Route::get('/api/notificaciones/{id}/leida', function($id) {
+        Route::get('/api/notificaciones/{id}/leida', function ($id) {
             return redirect()->route('cliente.notificaciones.index')
                 ->with('warning', '⚠️ Esta acción debe realizarse desde el sistema. Redirigiendo a tus notificaciones...');
         })->name('api.notificaciones.leida.get');

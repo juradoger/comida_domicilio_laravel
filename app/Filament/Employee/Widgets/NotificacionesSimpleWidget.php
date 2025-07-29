@@ -14,6 +14,10 @@ class NotificacionesSimpleWidget extends Widget
 
     protected int | string | array $columnSpan = 'full';
 
+    protected $listeners = [
+        'notificacion-marcada' => '$refresh',
+    ];
+
     public function getNotificaciones()
     {
         return Notificacion::where('id_usuario', Auth::id())
@@ -27,5 +31,25 @@ class NotificacionesSimpleWidget extends Widget
         return Notificacion::where('id_usuario', Auth::id())
             ->where('leido', false)
             ->count();
+    }
+
+    public function marcarComoLeida($id)
+    {
+        $notificacion = Notificacion::where('id', $id)
+            ->where('id_usuario', Auth::id())
+            ->first();
+
+        if ($notificacion) {
+            $notificacion->update(['leido' => true]);
+
+            // Emitir evento para refrescar el widget
+            $this->dispatch('notificacion-marcada');
+
+            // Notificación de éxito
+            \Filament\Notifications\Notification::make()
+                ->title('Notificación marcada como leída')
+                ->success()
+                ->send();
+        }
     }
 }
