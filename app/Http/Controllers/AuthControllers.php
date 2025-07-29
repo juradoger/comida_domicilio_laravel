@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Empleado;
 use Illuminate\Http\Request;
 
 class AuthControllers extends Controller
@@ -40,8 +41,10 @@ class AuthControllers extends Controller
                     return redirect('/admin');
                 case 2: // Empleado
                     return redirect('/empleado');
+                case 3: // Cliente
+                    return redirect('/dashboard');
                 default: // Cliente u otros
-                    return redirect('/cliente/dashboard');
+                    return redirect('/dashboard');
             }
         }
 
@@ -59,23 +62,84 @@ class AuthControllers extends Controller
     {
         $request->validate([
             'name' => ['required'],
+            'apellido' => ['required'],
             'email' => ['required', 'email', 'unique:users,email'],
+            'telefono' => ['required'],
             'password' => ['required', 'confirmed', 'min:6'],
+            'tipo_registro' => ['required', 'in:cliente,empleado'],
+            // Campos específicos para empleados
+            'ci' => ['required_if:tipo_registro,empleado', 'digits_between:7,8', 'unique:empleados,dni'],
+            'licencia_conducir' => ['required_if:tipo_registro,empleado', 'string', 'max:20'],
         ]);
 
-        // Asignar el id_rol de cliente por defecto (2)
-        $idRolCliente = 2;
+        // Determinar el rol según el tipo de registro
+        $idRol = $request->tipo_registro === 'empleado' ? 2 : 3; // 2=empleado, 3=cliente
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
+            'apellido' => $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'apellido' => $request->apellido ?? '',
-            'telefono' => $request->telefono ?? '',
-            'id_rol' => $idRolCliente,
+            'telefono' => $request->telefono,
+            'id_rol' => $idRol,
         ]);
 
-        return redirect()->route('login')->with('success', 'Usuario registrado correctamente.');
+        // Si es empleado, crear el registro en la tabla empleados
+        if ($request->tipo_registro === 'empleado') {
+            Empleado::create([
+                'fecha_ingreso' => now(),
+                'estado' => 'disponible',
+                'dni' => $request->ci,
+                'licencia_conducir' => $request->licencia_conducir,
+                'calificacion_promedio' => 0.0,
+                'id_usuario' => $user->id,
+            ]);
+        }
+
+        return redirect()->route('login')->with('success', 'Usuario registrado correctamente como ' . $request->tipo_registro . '.');
+    }
+
+    public function showConvertToEmployee()
+    {
+        $user = Auth::user();
+        
+        // Verificar que el usuario sea cliente
+        if ($user->id_rol !== 3) {
+            return redirect()->back()->with('error', 'Solo los clientes pueden convertirse en empleados.');
+        }
+
+        return view('auth.convert-to-employee');
+    }
+
+    public function convertToEmployee(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Verificar que el usuario sea cliente
+        if ($user->id_rol !== 3) {
+            return redirect()->back()->with('error', 'Solo los clientes pueden convertirse en empleados.');
+        }
+
+        $request->validate([
+            'ci' => ['required', 'digits_between:7,8', 'unique:empleados,dni'],
+            'licencia_conducir' => ['required', 'string', 'max:20'],
+        ]);
+
+        // Crear el registro de empleado
+        Empleado::create([
+            'fecha_ingreso' => now(),
+            'estado' => 'disponible',
+            'dni' => $request->ci,
+            'licencia_conducir' => $request->licencia_conducir,
+            'calificacion_promedio' => 0.0,
+            'id_usuario' => $user->id,
+        ]);
+
+        // Cambiar el rol del usuario de cliente a empleado
+        $user->id_rol = 2; // 2 = empleado
+        $user->save();
+
+        return redirect('/empleado')->with('success', '¡Felicidades! Ahora eres un empleado. Bienvenido al panel de empleados.');
     }
 
     public function logout(Request $request)
@@ -83,6 +147,6 @@ class AuthControllers extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login'); // Redirige siempre a la ruta de login principal
+        return redirect('/'); // Redirige a la página principal
     }
 }

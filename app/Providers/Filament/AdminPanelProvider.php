@@ -17,6 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Http\Middleware\AdminOrEmployeeAccess;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -26,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('Panel de Administración')
+            ->brandLogo('/images/logo.png')
             // ->login() // Eliminado para usar solo el login principal
             ->colors([
                 'primary' => Color::Orange,
@@ -38,7 +39,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                // Se eliminaron los widgets por defecto para usar el dashboard personalizado
+                \App\Filament\Admin\Widgets\NotificacionesBandejaWidget::class,
+                \App\Filament\Admin\Widgets\NotificacionesWidget::class,
+                \App\Filament\Admin\Widgets\StockBajoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -50,6 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                AdminOrEmployeeAccess::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

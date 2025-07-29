@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Pedido;
+use App\Models\Producto;
 use App\Observers\PedidoObserver;
+use App\Observers\ProductoObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Registrar el observador de pedidos
         Pedido::observe(PedidoObserver::class);
+        
+        // Registrar el observador de productos
+        Producto::observe(ProductoObserver::class);
     }
 }

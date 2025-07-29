@@ -24,7 +24,7 @@ class AdminController extends Controller
         // Estadísticas generales
         $totalPedidos = Pedido::count();
         $pedidosHoy = Pedido::whereDate('created_at', Carbon::today())->count();
-        $totalClientes = User::where('id_rol', 2)->count();
+        $totalClientes = User::where('id_rol', 3)->count();
         $totalEmpleados = User::where('id_rol', 1)->count();
         $totalProductos = Producto::count();
         $totalCategorias = Categoria::count();
@@ -170,7 +170,7 @@ class AdminController extends Controller
      */
     public function clientes()
     {
-        $clientes = User::where('id_rol', 2)
+        $clientes = User::where('id_rol', 3)
             ->withCount('pedidos')
             ->orderBy('name')
             ->paginate(15);
@@ -183,7 +183,7 @@ class AdminController extends Controller
      */
     public function verCliente($id)
     {
-        $cliente = User::where('id_rol', 2)->findOrFail($id);
+        $cliente = User::where('id_rol', 3)->findOrFail($id);
         $pedidos = Pedido::where('id_usuario', $id)
             ->orderBy('created_at', 'desc')
             ->get();

@@ -76,14 +76,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select class="form-select @error('estado') is-invalid @enderror" id="estado" name="estado" required>
+                            <select class="form-select @error('estado_pago') is-invalid @enderror" id="estado_pago" name="estado_pago" required>
                                 <option value="">Seleccione un estado</option>
-                                <option value="pendiente" {{ old('estado', $pago->estado) == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                                <option value="completado" {{ old('estado', $pago->estado) == 'completado' ? 'selected' : '' }}>Completado</option>
-                                <option value="rechazado" {{ old('estado', $pago->estado) == 'rechazado' ? 'selected' : '' }}>Rechazado</option>
+                                <option value="pendiente" {{ old('estado_pago', $pago->estado_pago) == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                <option value="pagado" {{ old('estado_pago', $pago->estado_pago) == 'pagado' ? 'selected' : '' }}>Pagado</option>
+                                <option value="fallido" {{ old('estado_pago', $pago->estado_pago) == 'fallido' ? 'selected' : '' }}>Fallido</option>
                             </select>
-                            <label for="estado">Estado</label>
-                            @error('estado')
+                            <label for="estado_pago">Estado</label>
+                            @error('estado_pago')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

@@ -6,12 +6,34 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-gray-800">Mi Carrito</h2>
-            <a href="{{ route('cliente.menu') }}" class="text-orange-600 hover:text-orange-800 font-medium">
-                <i class="fas fa-arrow-left mr-2"></i> Continuar comprando
-            </a>
+            <div class="flex items-center space-x-4">
+                <form action="{{ route('cliente.carrito.vaciar') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" 
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+                        onclick="return confirm('¿Estás seguro de vaciar todo el carrito?')">
+                        <i class="fas fa-trash mr-2"></i>
+                        Vaciar Carrito
+                    </button>
+                </form>
+                <a href="{{ route('cliente.menu') }}" class="text-orange-600 hover:text-orange-800 font-medium">
+                    <i class="text-orange-600 fas fa-arrow-left mr-2"></i> Continuar comprando
+                </a>
+            </div>
         </div>
 
         @if (count($items) > 0)
+            <!-- Mensajes de éxito/error -->
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -90,9 +112,11 @@
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900"
-                                                onclick="return confirm('¿Estás seguro de eliminar este producto del carrito?')">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="submit" 
+                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium transition duration-300 flex items-center justify-center mx-auto"
+                                                onclick="return confirm('¿Estás seguro de quitar este producto del carrito?')">
+                                                <i class="fas fa-trash mr-1"></i>
+                                                Quitar
                                             </button>
                                         </form>
                                     </td>
@@ -121,8 +145,27 @@
                             </div>
                             @if ($descuento > 0)
                                 <div class="flex justify-between text-green-600">
-                                    <span>Descuento:</span>
+                                    <span>
+                                        <i class="fas fa-tag mr-1"></i>
+                                        Descuento (10% usuarios nuevos):
+                                    </span>
                                     <span class="font-medium">-<span class="text-xs align-top">Bs</span> {{ number_format($descuento, 2, '.', ',') }}</span>
+                                </div>
+                                @php
+                                    $diasRestantes = round(30 - Auth::user()->created_at->diffInDays(now()));
+                                @endphp
+                                <div class="text-center mt-2">
+                                    <span class="text-xs text-green-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        Te quedan {{ $diasRestantes }} días para aprovechar este descuento
+                                    </span>
+                                </div>
+                            @elseif(Auth::check() && !$usuarioReciente)
+                                <div class="text-center mt-2">
+                                    <span class="text-xs text-gray-500">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        El descuento de usuarios nuevos expiró hace {{ round(Auth::user()->created_at->diffInDays(now()) - 30) }} días
+                                    </span>
                                 </div>
                             @endif
                             <div class="pt-4 border-t">
@@ -130,30 +173,62 @@
                                     <span class="text-lg font-bold text-gray-800">Total:</span>
                                     <span class="text-xl font-bold text-orange-600"><span class="text-xs align-top">Bs</span> {{ number_format($total, 2, '.', ',') }}</span>
                                 </div>
+                                @if ($descuento > 0)
+                                    <div class="mt-2 text-center">
+                                        <span class="text-sm text-green-600 font-medium">
+                                            <i class="fas fa-piggy-bank mr-1"></i>
+                                            ¡Ahorras Bs {{ number_format($descuento, 2, '.', ',') }}!
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
 
-                    <!-- Cupón de descuento -->
+                    <!-- Información de descuentos -->
                     <div class="mt-6 bg-white rounded-lg shadow-lg overflow-hidden">
                         <div class="px-6 py-4 bg-gray-50 border-b">
-                            <h3 class="text-lg font-bold text-gray-800">Cupón de Descuento</h3>
+                            <h3 class="text-lg font-bold text-gray-800">Descuentos Disponibles</h3>
                         </div>
                         <div class="p-6">
-                            <form action="{{ route('cliente.carrito.aplicar-cupon') }}" method="POST" class="flex">
-                                @csrf
-                                <input type="text" name="codigo" placeholder="Ingresa tu código"
-                                    class="flex-1 rounded-l-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200">
-                                <button type="submit"
-                                    class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-4 rounded-r-md transition duration-300">
-                                    Aplicar
-                                </button>
-                            </form>
-                            @if (session('cupon_error'))
-                                <p class="text-red-500 text-sm mt-2">{{ session('cupon_error') }}</p>
-                            @endif
-                            @if (session('cupon_success'))
-                                <p class="text-green-500 text-sm mt-2">{{ session('cupon_success') }}</p>
+                            @if(Auth::check())
+                                @if($usuarioReciente)
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                                            <div>
+                                                <h4 class="font-medium text-green-800">¡Descuento aplicado!</h4>
+                                                <p class="text-sm text-green-600">Como usuario nuevo (registrado en los últimos 30 días), tienes un 10% de descuento en tu pedido.</p>
+                                                <p class="text-xs text-green-500 mt-1">Fecha de registro: {{ Auth::user()->created_at->format('d/m/Y') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-info-circle text-gray-600 mr-3"></i>
+                                            <div>
+                                                <h4 class="font-medium text-gray-800">Descuento no disponible</h4>
+                                                <p class="text-sm text-gray-600">El descuento del 10% está disponible solo para usuarios registrados en los últimos 30 días.</p>
+                                                <p class="text-xs text-gray-500 mt-1">Te registraste el: {{ Auth::user()->created_at->format('d/m/Y') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+                                        <div>
+                                            <h4 class="font-medium text-blue-800">¡Regístrate y ahorra!</h4>
+                                            <p class="text-sm text-blue-600">Los usuarios nuevos (registrados en los últimos 30 días) obtienen un 10% de descuento automático.</p>
+                                            <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-medium text-sm mt-2 inline-block">
+                                                <i class="fas fa-user-plus mr-1"></i>
+                                                Registrarse ahora
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -173,54 +248,8 @@
                                     <h4 class="text-md font-bold text-gray-700 mb-3">Información de Entrega</h4>
 
                                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                                        <p class="text-blue-700 mb-2">La información de entrega se configurará en el
-                                            siguiente paso.</p>
+                                        <p class="text-blue-700 mb-2">La información de entrega y método de pago se configurarán en el siguiente paso.</p>
                                         <p class="text-sm text-blue-600">Procede con el pedido para continuar.</p>
-                                    </div>
-                                </div>
-
-                                <div class="mb-6">
-                                    <h4 class="text-md font-bold text-gray-700 mb-3">Método de pago</h4>
-
-                                    <div class="space-y-3">
-                                        <div class="border rounded-lg p-4 border-gray-200">
-                                            <div class="flex items-start">
-                                                <input type="radio" name="metodo_pago" id="metodo_efectivo"
-                                                    value="efectivo"
-                                                    class="mt-1 rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50"
-                                                    checked>
-                                                <label for="metodo_efectivo" class="ml-3 flex-1">
-                                                    <div class="font-medium text-gray-800">Efectivo</div>
-                                                    <div class="text-sm text-gray-600 mt-1">Paga en efectivo al momento de
-                                                        la entrega</div>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="border rounded-lg p-4 border-gray-200">
-                                            <div class="flex items-start">
-                                                <input type="radio" name="metodo_pago" id="metodo_tarjeta"
-                                                    value="tarjeta"
-                                                    class="mt-1 rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
-                                                <label for="metodo_tarjeta" class="ml-3 flex-1">
-                                                    <div class="font-medium text-gray-800">Tarjeta de crédito/débito</div>
-                                                    <div class="text-sm text-gray-600 mt-1">Paga con tarjeta al momento de
-                                                        la entrega</div>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="border rounded-lg p-4 border-gray-200">
-                                            <div class="flex items-start">
-                                                <input type="radio" name="metodo_pago" id="metodo_yape" value="yape"
-                                                    class="mt-1 rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
-                                                <label for="metodo_yape" class="ml-3 flex-1">
-                                                    <div class="font-medium text-gray-800">Yape</div>
-                                                    <div class="text-sm text-gray-600 mt-1">Paga con Yape al momento de la
-                                                        entrega</div>
-                                                </label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -250,11 +279,20 @@
                     <i class="fas fa-shopping-cart text-6xl"></i>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-2">Tu carrito está vacío</h3>
-                <p class="text-gray-600 mb-6">Parece que aún no has agregado productos a tu carrito.</p>
-                <a href="{{ route('cliente.menu') }}"
-                    class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded-md transition duration-300 inline-block">
-                    Ver Menú
-                </a>
+                <p class="text-gray-600 mb-6">Parece que aún no has agregado productos a tu carrito o los has eliminado todos.</p>
+                <div class="space-y-3">
+                    <a href="{{ route('cliente.menu') }}"
+                        class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded-md transition duration-300 inline-block">
+                        <i class="fas fa-utensils mr-2"></i>
+                        Ver Menú
+                    </a>
+                    <br>
+                    <a href="{{ route('cliente.pedidos.index') }}"
+                        class="text-orange-600 hover:text-orange-800 font-medium">
+                        <i class="fas fa-list mr-2"></i>
+                        Ver mis pedidos
+                    </a>
+                </div>
             </div>
         @endif
     </div>

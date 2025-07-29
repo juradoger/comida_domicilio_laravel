@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthControllers;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CarritoController;
@@ -14,8 +15,8 @@ use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 
-// Ruta raíz opcional (si deseas mostrar bienvenida)
-//Route::redirect('/', '/login');
+// Ruta raíz - mostrar dashboard con contenido dinámico según autenticación
+Route::get('/', [HomeController::class, 'dashboard'])->name('welcome');
 
 // Rutas de autenticación
 Route::get('/login', [AuthControllers::class, 'showLogin'])->name('login');
@@ -24,15 +25,33 @@ Route::get('/register', [AuthControllers::class, 'showRegister'])->name('registe
 Route::post('/register', [AuthControllers::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthControllers::class, 'logout'])->name('logout');
 
+// Rutas para conversión de cliente a empleado
+Route::middleware(['auth'])->group(function () {
+    Route::get('/convert-to-employee', [AuthControllers::class, 'showConvertToEmployee'])->name('convert.to.employee');
+    Route::post('/convert-to-employee', [AuthControllers::class, 'convertToEmployee'])->name('convert.to.employee.submit');
+});
 
-Route::get('/', [HomeController::class, 'dashboard'])->name('inicio');
+
 Route::get('/menu', [HomeController::class, 'menu'])->name('menuGuess');
+
+// Dashboard principal
+Route::get('/inicio', [HomeController::class, 'dashboard'])->name('inicio');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
-    // Dashboard general
+    // Dashboard general - redirige según el rol
     Route::get('/dashboard', function () {
-        return 'Bienvenido al panel';
+        $user = Auth::user();
+        switch ($user->id_rol) {
+            case 1: // Admin
+                return redirect('/admin');
+            case 2: // Empleado
+                return redirect('/empleado');
+            case 3: // Cliente
+                return redirect('/cliente/dashboard');
+            default: // Cliente u otros
+                return redirect('/cliente/dashboard');
+        }
     })->name('dashboard');
 
     // Rutas para clientes
@@ -47,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cliente/eliminar/{id}', [ClienteController::class, 'adminDestroy'])->name('clientes.eliminar');
 
     // Rutas para el rol de cliente
-    Route::middleware(['role:cliente'])->prefix('cliente')->name('cliente.')->group(function () {
+    Route::middleware(['role:cliente', 'cliente.access'])->prefix('cliente')->name('cliente.')->group(function () {
         // Dashboard del cliente
         Route::get('/dashboard', [ClienteController::class, 'dashboard'])->name('dashboard');
 
@@ -63,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/carrito/{id}', [CarritoController::class, 'actualizar'])->name('carrito.update');
         Route::delete('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
         Route::delete('/carrito/{id}', [CarritoController::class, 'eliminar'])->name('carrito.destroy');
-        Route::delete('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
+        Route::post('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
         Route::post('/carrito/aplicar-cupon', [CarritoController::class, 'aplicarCupon'])->name('carrito.aplicar-cupon');
         Route::post('/carrito/checkout', [CarritoController::class, 'checkout'])->name('carrito.checkout');
 
@@ -93,7 +112,15 @@ Route::middleware(['auth'])->group(function () {
         // Rutas para calificaciones (cliente)
         Route::get('/calificaciones', [CalificacionController::class, 'index'])->name('calificaciones.index');
         Route::get('/calificaciones/crear', [CalificacionController::class, 'create'])->name('calificaciones.crear');
-        Route::post('/calificaciones', [CalificacionController::class, 'store'])->name('calificaciones.guardar');
+        Route::get('/calificaciones/crear/{pedido_id}', [CalificacionController::class, 'create'])->name('calificaciones.create');
+        Route::post('/calificaciones/guardar', [CalificacionController::class, 'store'])->name('calificaciones.store');
+        Route::get('/calificaciones/{calificacion}', [CalificacionController::class, 'show'])->name('calificaciones.show');
+        Route::get('/calificaciones/{calificacion}/editar', [CalificacionController::class, 'edit'])->name('calificaciones.edit');
+        Route::put('/calificaciones/{calificacion}', [CalificacionController::class, 'update'])->name('calificaciones.update');
+        Route::delete('/calificaciones/{calificacion}', [CalificacionController::class, 'destroy'])->name('calificaciones.destroy');
+
+        // Rutas para calificaciones de empleados
+        Route::get('/mis-calificaciones', [CalificacionController::class, 'misCalificaciones'])->name('empleado.calificaciones');
 
         // Rutas para notificaciones (cliente)
         Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
@@ -105,11 +132,23 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/api/notificaciones', [ClienteController::class, 'obtenerNotificaciones'])->name('api.notificaciones');
         Route::post('/api/notificaciones/{id}/leida', [ClienteController::class, 'marcarNotificacionLeida'])->name('api.notificaciones.leida');
         Route::post('/api/notificaciones/todas-leidas', [ClienteController::class, 'marcarTodasLeidas'])->name('api.notificaciones.todas-leidas');
+        
+        // Protección para acceso GET a la API de notificaciones
+        Route::get('/api/notificaciones/todas-leidas', function() {
+            return redirect()->route('cliente.notificaciones.index')
+                ->with('warning', '⚠️ Esta acción debe realizarse desde el sistema. Redirigiendo a tus notificaciones...');
+        })->name('api.notificaciones.todas-leidas.get');
+        
+        // Protección para acceso GET a marcar notificación individual como leída
+        Route::get('/api/notificaciones/{id}/leida', function($id) {
+            return redirect()->route('cliente.notificaciones.index')
+                ->with('warning', '⚠️ Esta acción debe realizarse desde el sistema. Redirigiendo a tus notificaciones...');
+        })->name('api.notificaciones.leida.get');
     });
 
 
 
-    // Rutas para empleados
+    // Rutas para empleados (solo las que no están en Filament)
     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
     Route::get('/empleados/crear', [EmpleadoController::class, 'crear'])->name('empleados.crear');
     Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
@@ -174,6 +213,4 @@ Route::middleware(['auth'])->group(function () {
  */
     // Ruta para logout
     Route::post('/logout', [App\Http\Controllers\AuthControllers::class, 'logout'])->name('logout');
-
-    return view('welcome');
 });

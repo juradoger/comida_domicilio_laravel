@@ -41,11 +41,11 @@
                                     <div class="flex-grow">
                                         <h3 class="font-medium text-gray-800">{{ $item['nombre'] }}</h3>
                                         <p class="text-gray-600">Cantidad: {{ $item['cantidad'] }}</p>
-                                        <p class="text-gray-600">${{ number_format($item['precio'], 2) }} c/u</p>
+                                        <p class="text-gray-600">Bs. {{ number_format($item['precio'], 2) }} c/u</p>
                                     </div>
                                     <div class="text-right">
                                         <p class="font-medium text-gray-800">
-                                            ${{ number_format($item['precio'] * $item['cantidad'], 2) }}
+                                            Bs. {{ number_format($item['precio'] * $item['cantidad'], 2) }}
                                         </p>
                                     </div>
 
@@ -89,7 +89,7 @@
                                     <p class="text-sm text-gray-600 ml-9">Recibirás tu pedido en la dirección que
                                         especifiques</p>
                                 </div>
-                                <span class="text-green-600 font-medium">$10.00</span>
+                                <span class="text-green-600 font-medium">Bs. 10.00</span>
                             </label>
 
                             <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
@@ -140,8 +140,16 @@
                                 </div>
                             </div>
 
+                            <div>
+                                <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">Teléfono de contacto *</label>
+                                <input type="tel" id="telefono" name="telefono" required
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Ej: 68688349" pattern="[0-9]{8,10}" maxlength="10">
+                                <p class="text-xs text-gray-500 mt-1">Ingresa tu número de teléfono para que el repartidor pueda contactarte</p>
+                            </div>
+
                             <button type="button" onclick="obtenerUbicacion()"
-                                class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                class="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded hover:bg-blue-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -232,17 +240,17 @@
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-gray-600">Subtotal:</span>
-                                <span class="font-medium">${{ number_format($subtotal, 2) }}</span>
+                                <span class="font-medium">Bs. {{ number_format($subtotal, 2) }}</span>
                             </div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-gray-600">Costo de envío:</span>
-                                <span class="font-medium" id="costo-envio">$10.00</span>
+                                <span class="font-medium" id="costo-envio">Bs. 10.00</span>
                             </div>
                             <div class="border-t pt-2">
                                 <div class="flex justify-between items-center">
                                     <span class="text-lg font-semibold text-gray-800">Total:</span>
                                     <span class="text-lg font-bold text-orange-600"
-                                        id="total-pedido">${{ number_format($subtotal + 10, 2) }}</span>
+                                        id="total-pedido">Bs. {{ number_format($subtotal + 10, 2) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -279,8 +287,8 @@
                     let envio = metodoEntrega === 'domicilio' ? 10 : 0;
                     let total = subtotal + envio;
 
-                    costoEnvio.textContent = envio === 0 ? 'Gratis' : '$' + envio.toFixed(2);
-                    totalPedido.textContent = '$' + total.toFixed(2);
+                    costoEnvio.textContent = envio === 0 ? 'Gratis' : 'Bs. ' + envio.toFixed(2);
+                    totalPedido.textContent = 'Bs. ' + total.toFixed(2);
                 }
 
                 radioButtons.forEach(radio => {

@@ -55,8 +55,8 @@
                         <td>{{ $pago->metodo_pago }}</td>
                         <td>{{ number_format($pago->monto, 2) }}</td>
                         <td>
-                            <span class="badge bg-{{ $pago->estado == 'completado' ? 'success' : ($pago->estado == 'pendiente' ? 'warning' : 'danger') }}">
-                                {{ $pago->estado }}
+                            <span class="badge bg-{{ $pago->estado_pago == 'pagado' ? 'success' : ($pago->estado_pago == 'pendiente' ? 'warning' : 'danger') }}">
+                                {{ ucfirst($pago->estado_pago) }}
                             </span>
                         </td>
                         <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>

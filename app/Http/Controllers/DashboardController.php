@@ -24,8 +24,8 @@ class DashboardController extends Controller
         // Estadísticas generales
         $totalPedidos = Pedido::count();
         $pedidosHoy = Pedido::whereDate('created_at', Carbon::today())->count();
-        $totalClientes = User::where('id_rol', 2)->count(); // Asumiendo que rol 2 es cliente
-        $clientesNuevosMes = User::where('id_rol', 2)
+        $totalClientes = User::where('id_rol', 3)->count(); // Asumiendo que rol 3 es cliente
+        $clientesNuevosMes = User::where('id_rol', 3)
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
@@ -159,6 +159,5 @@ class DashboardController extends Controller
             'pedidosPorDia',
             'totalUsuarios'
         ));
-    }
     }
 }

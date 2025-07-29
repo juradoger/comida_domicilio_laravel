@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold text-gray-800">Calificar Pedido</h2>
-            <a href="{{ route('cliente.pedidos') }}"
+            <a href="{{ route('pedidos.index') }}"
                 class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded transition duration-300">
                 <i class="fas fa-arrow-left mr-2"></i> Volver a Pedidos
             </a>
@@ -31,7 +31,7 @@
                                     {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}</p>
                                 <p><span class="font-medium">Total:</span> Bs {{ number_format($pedido->total, 2) }}</p>
                                 <p><span class="font-medium">Repartidor:</span>
-                                    {{ $pedido->empleado->user->name ?? 'No asignado' }}</p>
+                                    {{ $pedido->empleado->usuario->name ?? 'No asignado' }}</p>
                             </div>
                         </div>
                     </div>
@@ -41,30 +41,32 @@
                     @csrf
 
                     @if (isset($pedido))
-                        <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
-                        <input type="hidden" name="empleado_id" value="{{ $pedido->empleado_id }}">
+                        <input type="hidden" name="id_pedido" value="{{ $pedido->id }}">
+                        <input type="hidden" name="id_empleado" value="{{ $pedido->empleado_id }}">
                     @else
                         <div class="mb-4">
                             <label for="pedido_id" class="block text-gray-700 text-sm font-bold mb-2">Selecciona un
                                 Pedido:</label>
-                            <select name="pedido_id" id="pedido_id" required
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('pedido_id') border-red-500 @enderror">
+                            <select name="id_pedido" id="pedido_id" required
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('id_pedido') border-red-500 @enderror">
                                 <option value="">-- Selecciona un pedido --</option>
-                                @foreach ($pedidos as $pedido)
-                                    <option value="{{ $pedido->id }}" data-empleado="{{ $pedido->empleado_id }}"
-                                        {{ old('pedido_id') == $pedido->id ? 'selected' : '' }}>
-                                        Pedido #{{ $pedido->id }} -
-                                        {{ $pedido->empleado->user->name ?? 'Sin repartidor' }} -
-                                        {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}
-                                    </option>
-                                @endforeach
+                                @if(isset($pedidos))
+                                    @foreach ($pedidos as $pedido)
+                                        <option value="{{ $pedido->id }}" data-empleado="{{ $pedido->empleado_id }}"
+                                            {{ old('id_pedido') == $pedido->id ? 'selected' : '' }}>
+                                            Pedido #{{ $pedido->id }} -
+                                            {{ $pedido->empleado->usuario->name ?? 'Sin repartidor' }} -
+                                            {{ ucfirst(str_replace('_', ' ', $pedido->estado)) }}
+                                        </option>
+                                    @endforeach
+                                @endif
                             </select>
-                            @error('pedido_id')
+                            @error('id_pedido')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <input type="hidden" name="empleado_id" id="empleado_id" value="{{ old('empleado_id') }}">
+                        <input type="hidden" name="id_empleado" id="empleado_id" value="{{ old('id_empleado') }}">
                     @endif
 
                     <div class="mb-6">
@@ -84,10 +86,10 @@
                                     </button>
                                 @endfor
                             </div>
-                            <input type="hidden" name="puntuacion" id="puntuacion" value="{{ old('puntuacion', 5) }}"
+                            <input type="hidden" name="calificacion" id="puntuacion" value="{{ old('calificacion', 5) }}"
                                 required>
                         </div>
-                        @error('puntuacion')
+                        @error('calificacion')
                             <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -105,7 +107,7 @@
                             class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition duration-300">
                             Enviar Calificación
                         </button>
-                        <a href="{{ route('cliente.pedidos') }}"
+                        <a href="{{ route('pedidos.index') }}"
                             class="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800">
                             Cancelar
                         </a>

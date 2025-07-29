@@ -19,29 +19,33 @@ class DatabaseSeeder extends Seeder
             RolSeeder::class,
         ]);
 
-        $admin = User::factory()->create([
-            'name' => 'Admin',
+        $admin = User::firstOrCreate([
             'email' => 'admin@example.com',
+        ], [
+            'name' => 'Admin',
             'id_rol' => 1,
         ]);
 
-        $empleado = User::factory()->create([
-            'name' => 'Empleado',
+        $empleado = User::firstOrCreate([
             'email' => 'empleado@example.com',
+        ], [
+            'name' => 'Empleado',
             'id_rol' => 2,
         ]);
 
-        $cliente = User::factory()->create([
-            'name' => 'Cliente',
+        $cliente = User::firstOrCreate([
             'email' => 'cliente@example.com',
+        ], [
+            'name' => 'Cliente',
             'id_rol' => 3,
         ]);
 
         // Crear registro de empleado para el usuario empleado
-        \App\Models\Empleado::create([
+        \App\Models\Empleado::firstOrCreate([
+            'dni' => '12345678',
+        ], [
             'fecha_ingreso' => now(),
             'estado' => 'disponible',
-            'dni' => '12345678',
             'licencia_conducir' => 'LIC123456',
             'calificacion_promedio' => 4.5,
             'id_usuario' => $empleado->id,

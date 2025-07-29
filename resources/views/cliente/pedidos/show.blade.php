@@ -5,10 +5,10 @@
 @section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-bold text-gray-800">Detalle de Pedido #{{ $pedido->id }}</h2>
+            <h2 class="text-3xl font-bold text-gray-800">Detalle de Pedido N°{{ $pedido->id }}</h2>
             <a href="{{ route('cliente.pedidos.index') }}"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded transition duration-300">
-                <i class="fas fa-arrow-left mr-2"></i> Volver a Mis Pedidos
+                class="bg-orange-500 hover:bg-orange-300 text-white font-bold py-2 px-4 rounded transition duration-300">
+                <i class="fas fa-arrow-left mr-2"></i> Volver a mis pedidos
             </a>
         </div>
 
@@ -20,16 +20,54 @@
                         <div class="flex justify-between items-center">
                             <h3 class="text-lg font-bold text-gray-800">Información del Pedido</h3>
                             <span
-                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                @if ($pedido->estado == 'Entregado') bg-green-100 text-green-800
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                @if($pedido->estado == 'Entregado') bg-green-100 text-green-800
                                 @elseif($pedido->estado == 'En proceso') bg-blue-100 text-blue-800
                                 @elseif($pedido->estado == 'En camino') bg-indigo-100 text-indigo-800
                                 @elseif($pedido->estado == 'Cancelado') bg-red-100 text-red-800
                                 @else bg-yellow-100 text-yellow-800 @endif">
-                                {{ $pedido->estado }}
+                                {{ $pedido->estado_formateado }}
                             </span>
                         </div>
                     </div>
+                    
+                    <!-- Botón de calificación para pedidos entregados -->
+                    @if($pedido->estado == 'Entregado' && !$pedido->calificacion)
+                        <div class="px-6 py-4 bg-orange-50 border-t border-orange-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-star text-orange-500 mr-2"></i>
+                                    <span class="text-sm font-medium text-orange-800">¿Cómo fue tu experiencia con el repartidor?</span>
+                                </div>
+                                <a href="{{ route('cliente.calificaciones.create', $pedido->id) }}"
+                                   class="inline-flex items-center px-4 py-2 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors">
+                                    <i class="fa-solid fa-star mr-2"></i>
+                                    Calificar Pedido
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if($pedido->calificacion)
+                        <div class="px-6 py-4 bg-green-50 border-t border-green-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span class="text-sm font-medium text-green-800">Ya calificaste este pedido</span>
+                                </div>
+                                <div class="flex items-center">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        @if($i <= $pedido->calificacion->calificacion)
+                                            <i class="fa-solid fa-star text-yellow-400 text-sm"></i>
+                                        @else
+                                            <i class="fa-regular fa-star text-gray-300 text-sm"></i>
+                                        @endif
+                                    @endfor
+                                    <span class="ml-2 text-sm text-gray-600">{{ $pedido->calificacion->calificacion }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     <div class="p-6">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>

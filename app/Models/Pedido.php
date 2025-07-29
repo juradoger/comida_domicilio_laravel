@@ -99,6 +99,21 @@ class Pedido extends Model
     }
 
     /**
+     * Accessor para formatear el estado del pedido.
+     */
+    public function getEstadoFormateadoAttribute()
+    {
+        $estados = [
+            'pendiente' => 'Pendiente',
+            'aceptado' => 'Aceptado',
+            'en_camino' => 'En camino',
+            'entregado' => 'Entregado',
+            'cancelado' => 'Cancelado'
+        ];
+        return $estados[$this->estado] ?? ucfirst($this->estado);
+    }
+
+    /**
      * Obtiene los pagos asociados al pedido.
      */
     public function pagos()

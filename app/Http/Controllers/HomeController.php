@@ -350,7 +350,7 @@ class HomeController extends Controller
      */
     public function adminIndex()
     {
-        $clientes = User::where('id_rol', 2)->get();
+        $clientes = User::where('id_rol', 3)->get();
         return view('clientes.index', compact('clientes'));
     }
 

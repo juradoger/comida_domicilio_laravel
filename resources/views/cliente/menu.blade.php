@@ -124,12 +124,17 @@
         <!-- Listado de productos -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @forelse($productos as $producto)
-                <div
-                    class="producto-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
-                    <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : 'https://via.placeholder.com/300x200?text=Sin+Imagen' }}"
-                        alt="{{ $producto->nombre }}" class="w-full h-48 object-cover">
+                <div class="producto-card bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition">
+                    <!-- Imagen clickeable que lleva al detalle -->
+                    <a href="{{ route('cliente.productos.detalle', $producto->id) }}" class="block">
+                        <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : 'https://via.placeholder.com/300x200?text=Sin+Imagen' }}"
+                            alt="{{ $producto->nombre }}" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300">
+                    </a>
                     <div class="p-4">
-                        <h3 class="text-lg font-bold text-gray-800">{{ $producto->nombre }}</h3>
+                        <!-- Título clickeable -->
+                        <a href="{{ route('cliente.productos.detalle', $producto->id) }}" class="block">
+                            <h3 class="text-lg font-bold text-gray-800 hover:text-orange-600 transition-colors">{{ $producto->nombre }}</h3>
+                        </a>
                         @if (isset($producto->categoria))
                             <p class="text-gray-600 text-sm mb-2">{{ $producto->categoria->nombre }}</p>
                         @endif

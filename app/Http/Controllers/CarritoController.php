@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producto;
+use App\Services\StockNotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CarritoController extends Controller
 {
+    protected $stockNotificationService;
+
+    public function __construct(StockNotificationService $stockNotificationService)
+    {
+        $this->stockNotificationService = $stockNotificationService;
+    }
+
     /**
      * Muestra el contenido del carrito de compras.
      */
@@ -33,13 +42,31 @@ class CarritoController extends Controller
         }
 
         $costoEnvio = 10.00; // Fixed shipping cost
-        $descuento = 0; // No discount system yet
+        
+        // Aplicar descuento del 10% solo para usuarios registrados recientemente (últimos 30 días)
+        $descuento = 0;
+        $descuentoAplicado = false;
+        $usuarioReciente = false;
+        
+        if (Auth::check()) {
+            $usuario = Auth::user();
+            $fechaRegistro = $usuario->created_at;
+            $fechaLimite = now()->subDays(30);
+            
+            // Verificar si el usuario se registró en los últimos 30 días
+            if ($fechaRegistro->greaterThan($fechaLimite)) {
+                $descuento = $subtotal * 0.10; // 10% de descuento
+                $descuentoAplicado = true;
+                $usuarioReciente = true;
+            }
+        }
+        
         $total = $subtotal + $costoEnvio - $descuento;
 
         // Get user addresses (we'll need to create this functionality)
         $direcciones = collect(); // Empty for now, will implement later
 
-        return view('cliente.carrito.index', compact('items', 'subtotal', 'costoEnvio', 'descuento', 'total', 'direcciones'));
+        return view('cliente.carrito.index', compact('items', 'subtotal', 'costoEnvio', 'descuento', 'total', 'direcciones', 'descuentoAplicado', 'usuarioReciente'));
     }
 
     /**
@@ -53,11 +80,30 @@ class CarritoController extends Controller
         ]);
 
         $producto = Producto::findOrFail($request->producto_id);
+        
+        // Verificar si hay suficiente stock
+        if ($producto->stock < $request->cantidad) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay suficiente stock disponible. Stock actual: ' . $producto->stock
+            ], 400);
+        }
+
         $carrito = Session::get('carrito', []);
 
         // Si el producto ya está en el carrito, actualizar la cantidad
         if (isset($carrito[$producto->id])) {
-            $carrito[$producto->id]['cantidad'] += $request->cantidad;
+            $nuevaCantidad = $carrito[$producto->id]['cantidad'] + $request->cantidad;
+            
+            // Verificar stock total
+            if ($producto->stock < $nuevaCantidad) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No hay suficiente stock disponible. Stock actual: ' . $producto->stock
+                ], 400);
+            }
+            
+            $carrito[$producto->id]['cantidad'] = $nuevaCantidad;
         } else {
             // Agregar nuevo producto al carrito
             $carrito[$producto->id] = [
@@ -70,6 +116,9 @@ class CarritoController extends Controller
         }
 
         Session::put('carrito', $carrito);
+
+        // Verificar stock después de agregar al carrito
+        $this->stockNotificationService->verificarStockProducto($producto);
 
         return response()->json([
             'success' => true,
@@ -134,8 +183,8 @@ class CarritoController extends Controller
     {
         Session::forget('carrito');
 
-        return redirect()->route('cliente.carrito')
-            ->with('success', 'Carrito vaciado correctamente');
+        return redirect()->route('cliente.menu')
+            ->with('success', 'Carrito vaciado correctamente. ¡Agrega productos deliciosos a tu carrito!');
     }
 
     /**

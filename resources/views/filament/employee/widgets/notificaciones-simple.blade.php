@@ -37,11 +37,12 @@
 
                         @if (!$notificacion->leido)
                             <div class="flex-shrink-0">
-                                <x-filament::button size="xs" color="primary"
-                                    href="{{ route('cliente.api.notificaciones.leida', $notificacion->id) }}"
-                                    tag="a">
-                                    Marcar leída
-                                </x-filament::button>
+                                <form action="{{ route('cliente.api.notificaciones.leida', $notificacion->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <x-filament::button size="xs" color="primary" type="submit">
+                                        Marcar leída
+                                    </x-filament::button>
+                                </form>
                             </div>
                         @endif
                     </div>
@@ -50,10 +51,12 @@
 
             @if ($this->getNotificacionesNoLeidas() > 0)
                 <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 text-center">
-                    <x-filament::button size="sm" color="primary"
-                        href="{{ route('cliente.api.notificaciones.todas-leidas') }}" tag="a">
-                        Marcar todas como leídas
-                    </x-filament::button>
+                    <form action="{{ route('cliente.api.notificaciones.todas-leidas') }}" method="POST" class="inline">
+                        @csrf
+                        <x-filament::button size="sm" color="primary" type="submit">
+                            Marcar todas como leídas
+                        </x-filament::button>
+                    </form>
                 </div>
             @endif
         @else

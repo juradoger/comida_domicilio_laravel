@@ -16,6 +16,7 @@ class Direccion extends Model
         'direccion',
         'latitud',
         'longitud',
+        'telefono',
     ];
 
     public function pedido()

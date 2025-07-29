@@ -118,7 +118,7 @@ class EmpleadoController extends Controller
 
     public function listarClientes()
     {
-        $clientes = \App\Models\User::where('id_rol', 2)->get();
+        $clientes = \App\Models\User::where('id_rol', 3)->get();
         return view('empleado.clientes', compact('clientes'));
     }
 

@@ -3,10 +3,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use App\Models\Categoria;
+use App\Services\StockNotificationService;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+    protected $stockNotificationService;
+
+    public function __construct(StockNotificationService $stockNotificationService)
+    {
+        $this->stockNotificationService = $stockNotificationService;
+    }
+
     public function index()
     {
         $productos = Producto::with('categoria')->get();
@@ -25,6 +33,7 @@ class ProductoController extends Controller
             'nombre' => 'required',
             'descripcion' => 'required',
             'precio' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
             'id_categoria' => 'required|exists:categorias,id',
             'imagen' => 'nullable|image|max:2048',
         ]);
@@ -35,7 +44,10 @@ class ProductoController extends Controller
             $datos['imagen'] = $request->file('imagen')->store('imagenes', 'public');
         }
 
-        Producto::create($datos);
+        $producto = Producto::create($datos);
+
+        // Verificar stock después de crear el producto
+        $this->stockNotificationService->verificarStockProducto($producto);
 
         return redirect()->route('productos.index')->with('success', 'Producto creado correctamente.');
     }
@@ -57,6 +69,7 @@ class ProductoController extends Controller
             'nombre' => 'required',
             'descripcion' => 'required',
             'precio' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
             'id_categoria' => 'required|exists:categorias,id',
             'imagen' => 'nullable|image|max:2048',
         ]);
@@ -68,6 +81,9 @@ class ProductoController extends Controller
         }
 
         $producto->update($datos);
+
+        // Verificar stock después de actualizar el producto
+        $this->stockNotificationService->verificarStockProducto($producto);
 
         return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }

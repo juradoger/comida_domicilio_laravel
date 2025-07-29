@@ -32,9 +32,13 @@ class CalificacionController extends Controller
     /**
      * Muestra el formulario para crear una nueva calificación.
      */
-    public function create(Request $request)
+    public function create(Request $request, $pedido_id = null)
     {
-        $pedido_id = $request->query('pedido_id');
+        // Si no se proporciona pedido_id en la URL, intentar obtenerlo del query parameter
+        if (!$pedido_id) {
+            $pedido_id = $request->query('pedido_id') ?? $request->query('pedido');
+        }
+
         $pedido = null;
 
         if ($pedido_id) {
@@ -78,7 +82,7 @@ class CalificacionController extends Controller
         }
 
         // Crear la calificación
-        Calificacion::create([
+        $calificacion = Calificacion::create([
             'id_pedido' => $request->id_pedido,
             'id_usuario' => Auth::id(),
             'id_empleado' => $pedido->empleado ? $pedido->empleado->id_usuario : null,
@@ -86,8 +90,28 @@ class CalificacionController extends Controller
             'comentario' => $request->comentario,
         ]);
 
+        // Actualizar la calificación promedio del empleado si existe
+        if ($pedido->empleado) {
+            $this->actualizarCalificacionPromedio($pedido->empleado->id_usuario);
+        }
+
         return redirect()->route('cliente.pedidos.index')
             ->with('success', 'Calificación enviada exitosamente. ¡Gracias por tu opinión!');
+    }
+
+    /**
+     * Actualiza la calificación promedio de un empleado
+     */
+    private function actualizarCalificacionPromedio($idEmpleado)
+    {
+        // Calcular el promedio de todas las calificaciones del empleado
+        $promedio = Calificacion::where('id_empleado', $idEmpleado)
+            ->whereNotNull('calificacion')
+            ->avg('calificacion');
+
+        // Actualizar el campo calificacion_promedio en la tabla empleados
+        \App\Models\Empleado::where('id_usuario', $idEmpleado)
+            ->update(['calificacion_promedio' => round($promedio, 1)]);
     }
 
     /**
@@ -118,6 +142,27 @@ class CalificacionController extends Controller
             ->get();
 
         return view('admin.calificaciones.empleado', compact('calificaciones', 'empleado'));
+    }
+
+    /**
+     * Muestra las calificaciones del empleado autenticado
+     */
+    public function misCalificaciones()
+    {
+        // Verificar que el usuario autenticado sea un empleado
+        if (Auth::user()->id_rol !== 2) {
+            return redirect()->back()->with('error', 'Acceso denegado.');
+        }
+
+        $calificaciones = Calificacion::where('id_empleado', Auth::id())
+            ->with(['pedido', 'usuario'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Obtener información del empleado
+        $empleado = \App\Models\Empleado::where('id_usuario', Auth::id())->first();
+
+        return view('empleado.calificaciones.index', compact('calificaciones', 'empleado'));
     }
 
     /**

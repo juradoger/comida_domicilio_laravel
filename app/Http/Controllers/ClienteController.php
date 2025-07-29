@@ -134,6 +134,7 @@ class ClienteController extends Controller
             'latitud' => 'nullable|numeric',
             'longitud' => 'nullable|numeric',
             'metodo_pago' => 'required|in:efectivo,tarjeta,transferencia,yape',
+            'telefono' => 'required|string|min:8|max:10|regex:/^[0-9]+$/',
         ]);
 
         // Calcular subtotal
@@ -175,6 +176,7 @@ class ClienteController extends Controller
                 'direccion' => $request->direccion,
                 'latitud' => $request->latitud,
                 'longitud' => $request->longitud,
+                'telefono' => $request->telefono,
             ]);
         }
 
@@ -192,7 +194,7 @@ class ClienteController extends Controller
         // Crear notificación para el cliente
         Notificacion::create([
             'id_usuario' => Auth::id(),
-            'mensaje' => '🎉 ¡Hemos recibido tu pedido #' . $pedido->id . '! Tu deliciosa comida está siendo preparada. Pronto asignaremos un repartidor para entregarte tu orden. Te mantendremos informado sobre el estado de tu pedido.',
+            'mensaje' => '🎉 ¡Hemos recibido tu pedido N°' . $pedido->id . '! Tu deliciosa comida está siendo preparada. Pronto asignaremos un repartidor para entregarte tu orden. Te mantendremos informado sobre el estado de tu pedido.',
             'leido' => false,
             'fecha_envio' => now(),
         ]);
@@ -361,7 +363,7 @@ class ClienteController extends Controller
      */
     public function adminIndex()
     {
-        $clientes = User::where('id_rol', 2)->get();
+        $clientes = User::where('id_rol', 3)->get();
         return view('clientes.index', compact('clientes'));
     }
 
@@ -455,8 +457,16 @@ class ClienteController extends Controller
                 'estado' => 'en_camino'
             ]);
 
-            //  update empleado
+            // Actualizar estado del empleado
             $empleadoDisponible->update(['estado' => 'ocupado']);
+
+            // Crear notificación para el empleado
+            Notificacion::create([
+                'id_usuario' => $empleadoDisponible->usuario->id,
+                'mensaje' => '🚴‍♂️ ¡Te hemos asignado un nuevo pedido! Pedido #' . $pedido->id . ' por un total de Bs ' . number_format($pedido->total, 2) . '. Revisa los detalles y prepárate para la entrega.',
+                'leido' => false,
+                'fecha_envio' => now(),
+            ]);
 
             Log::info("Pedido #{$pedido->id} asignado automáticamente al empleado {$empleadoDisponible->usuario->name} (ID: {$empleadoDisponible->id})");
         } else {

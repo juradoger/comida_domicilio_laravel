@@ -326,6 +326,21 @@
         <form method="POST" action="{{ route('register.submit') }}" class="space-y-5">
             @csrf
             
+            <!-- Tipo de Registro -->
+            <div class="input-group">
+                <select name="tipo_registro" id="tipo_registro" required class="input-field" onchange="toggleEmployeeFields()">
+                    <option value="">Selecciona el tipo de cuenta</option>
+                    <option value="cliente" {{ old('tipo_registro') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                    <option value="empleado" {{ old('tipo_registro') == 'empleado' ? 'selected' : '' }}>Empleado/Repartidor</option>
+                </select>
+                <div class="input-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+            </div>
+            
             <!-- Campo Nombre -->
             <div class="input-group">
                 <input 
@@ -397,6 +412,45 @@
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
+                </div>
+            </div>
+
+            <!-- Campos específicos para empleados -->
+            <div id="employee-fields" style="display: none;">
+                <!-- Campo CI -->
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="ci" 
+                        placeholder="CI (7-8 dígitos)" 
+                        class="input-field"
+                        value="{{ old('ci') }}"
+                        maxlength="8"
+                        pattern="[0-9]{7,8}"
+                    >
+                    <div class="input-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <rect width="18" height="11" x="3" y="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Campo Licencia de Conducir -->
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="licencia_conducir" 
+                        placeholder="Licencia de conducir" 
+                        class="input-field"
+                        value="{{ old('licencia_conducir') }}"
+                    >
+                    <div class="input-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
 
@@ -486,6 +540,30 @@ document.addEventListener('DOMContentLoaded', function() {
             typeWriter(subtitle, 'Crea tu cuenta y disfruta de la mejor comida', 50);
         });
     }, 800);
+
+    // Función para mostrar/ocultar campos específicos para empleados
+    function toggleEmployeeFields() {
+        const tipoRegistro = document.getElementById('tipo_registro').value;
+        const employeeFields = document.getElementById('employee-fields');
+        const ciInput = document.querySelector('input[name="ci"]');
+        const licenciaInput = document.querySelector('input[name="licencia_conducir"]');
+
+        if (tipoRegistro === 'empleado') {
+            employeeFields.style.display = 'block';
+            ciInput.required = true;
+            licenciaInput.required = true;
+        } else {
+            employeeFields.style.display = 'none';
+            ciInput.required = false;
+            licenciaInput.required = false;
+        }
+    }
+
+    // Llamar a la función para establecer el estado inicial
+    toggleEmployeeFields();
+
+    // Agregar event listener para el cambio de tipo de registro
+    document.getElementById('tipo_registro').addEventListener('change', toggleEmployeeFields);
 });
 </script>
 @endsection

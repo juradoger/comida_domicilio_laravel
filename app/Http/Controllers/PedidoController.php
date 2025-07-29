@@ -18,7 +18,7 @@ class PedidoController extends Controller
 
     public function create()
     {
-        $usuarios = User::where('id_rol', 2)->get(); // Clientes
+        $usuarios = User::where('id_rol', 3)->get(); // Clientes
         $empleados = Empleado::with('usuario')->get(); // Empleados con datos del usuario
         return view('pedidos.crear', compact('usuarios', 'empleados'));
     }
