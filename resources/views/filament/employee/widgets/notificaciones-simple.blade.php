@@ -52,7 +52,7 @@
                     <form action="{{ route('cliente.api.notificaciones.todas-leidas') }}" method="POST" class="inline">
                         @csrf
                         <x-filament::button size="sm" color="primary" type="submit">
-                            Marcar todas como leídas
+                            Marcar todas como leídasss
                         </x-filament::button>
                     </form>
                 </div>

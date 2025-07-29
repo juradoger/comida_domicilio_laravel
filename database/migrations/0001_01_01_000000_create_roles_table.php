@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique(); // Ej: cliente, empleado, admin
-            $table->timestamp('fecha_creacion');
+            $table->timestamp('fecha_creacion')->useCurrent();
             $table->timestamps();
         });
     }

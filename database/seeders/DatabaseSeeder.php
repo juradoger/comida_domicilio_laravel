@@ -23,21 +23,27 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
         ], [
             'name' => 'Admin',
+            'apellido' => 'Administrador',
             'id_rol' => 1,
+            'password' => bcrypt('admin123'),
         ]);
 
         $empleado = User::firstOrCreate([
             'email' => 'empleado@example.com',
         ], [
             'name' => 'Empleado',
+            'apellido' => 'Empleado',
             'id_rol' => 2,
+            'password' => bcrypt('empleado123'),
         ]);
 
         $cliente = User::firstOrCreate([
             'email' => 'cliente@example.com',
         ], [
             'name' => 'Cliente',
+            'apellido' => 'Cliente',
             'id_rol' => 3,
+            'password' => bcrypt('cliente123'),
         ]);
 
         // Crear registro de empleado para el usuario empleado
